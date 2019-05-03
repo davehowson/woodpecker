@@ -37,7 +37,7 @@ public class NoteController {
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> createNote(@Valid @RequestBody NoteRequest noteRequest,
                                         @CurrentUser UserPrincipal currentUser ) {
-        Note note = noteService.createNote(noteRequest, currentUser.getUsername());
+        Note note = noteService.createNote(noteRequest, currentUser.getEmail());
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{noteId}")
@@ -45,6 +45,26 @@ public class NoteController {
 
         return ResponseEntity.created(location)
                 .body(new ApiResponse(true, "Note Created Successfully"));
+    }
+
+    @PatchMapping
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> updateNote(@Valid @RequestBody NoteUpdateRequest noteUpdateRequest,
+                                        @CurrentUser UserPrincipal currentUser) {
+        Note note = noteService.updateNote(noteUpdateRequest, currentUser.getEmail());
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest().path("/{noteId}")
+                .buildAndExpand(note.getId()).toUri();
+
+        return ResponseEntity.created(location)
+                .body(new ApiResponse(true, "Note Updated Successfully"));
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('USER')")
+    public ApiResponse deleteNote(@PathVariable("id") Long id){
+        return noteService.deleteNote(id);
     }
 
 }

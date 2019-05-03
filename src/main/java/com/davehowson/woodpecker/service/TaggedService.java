@@ -4,7 +4,7 @@ import com.davehowson.woodpecker.exception.AppException;
 import com.davehowson.woodpecker.exception.BadRequestException;
 import com.davehowson.woodpecker.model.Tag;
 import com.davehowson.woodpecker.model.TagName;
-import com.davehowson.woodpecker.payload.ApiRequest;
+import com.davehowson.woodpecker.payload.TaggedRequest;
 import com.davehowson.woodpecker.repository.TagRepository;
 import com.davehowson.woodpecker.repository.UserRepository;
 import com.davehowson.woodpecker.util.AppConstants;
@@ -33,9 +33,9 @@ public abstract class TaggedService {
     }
 
 
-    Set<Tag> mapTags(ApiRequest apiRequest) {
+    Set<Tag> mapTags(TaggedRequest taggedRequest) {
         Set<Tag> tags = new HashSet<>();
-        apiRequest.getTagNames().forEach((v) -> {
+        taggedRequest.getTagNames().forEach((v) -> {
             try {
                 Tag tag  = tagRepository.findByName(TagName.valueOf(v)).orElseThrow(() -> new AppException("Tag not found"));
                 tags.add(tag);

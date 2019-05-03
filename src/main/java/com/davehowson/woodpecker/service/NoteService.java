@@ -1,5 +1,6 @@
 package com.davehowson.woodpecker.service;
 
+import com.davehowson.woodpecker.exception.AppException;
 import com.davehowson.woodpecker.exception.ResourceNotFoundException;
 import com.davehowson.woodpecker.model.*;
 import com.davehowson.woodpecker.payload.*;
@@ -65,5 +66,21 @@ public class NoteService extends TaggedService {
         note.setUser(user);
 
         return noteRepository.save(note);
+    }
+
+    public Note updateNote(NoteUpdateRequest noteUpdateRequest, String email) {
+        Note note = noteRepository.findById(noteUpdateRequest.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Note", "id", noteUpdateRequest.getId()));
+        note.setTitle(noteUpdateRequest.getTitle());
+        note.setDescription(noteUpdateRequest.getDescription());
+        Set<Tag> tags = mapTags(noteUpdateRequest);
+        note.setTags(tags);
+        noteRepository.save(note);
+        return note;
+    }
+
+    public ApiResponse deleteNote(Long noteId) {
+        noteRepository.deleteById(noteId);
+        return new ApiResponse(true, "Note Successfully Deleted");
     }
 }

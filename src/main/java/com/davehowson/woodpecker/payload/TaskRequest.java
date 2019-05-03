@@ -6,7 +6,7 @@ import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
 
-public class TaskRequest implements ApiRequest {
+public class TaskRequest implements TaggedRequest {
     @Size(max = 100)
     private String date;
 

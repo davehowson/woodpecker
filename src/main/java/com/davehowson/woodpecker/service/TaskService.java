@@ -86,4 +86,21 @@ public class TaskService extends TaggedService {
         return taskCompleteResponse;
     }
 
+    public Task updateTask(TaskUpdateRequest taskUpdateRequest, String email) {
+        Task task = taskRepository.findById(taskUpdateRequest.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Note", "id", taskUpdateRequest.getId()));
+        task.setDescription(taskUpdateRequest.getDescription());
+        task.setDate(taskUpdateRequest.getDate());
+        task.setComplete(taskUpdateRequest.getIsComplete());
+        Set<Tag> tags = mapTags(taskUpdateRequest);
+        task.setTags(tags);
+        taskRepository.save(task);
+        return task;
+    }
+
+    public ApiResponse deleteTask(Long taskId) {
+        taskRepository.deleteById(taskId);
+        return new ApiResponse(true, "Task Successfully Deleted");
+    }
+
 }

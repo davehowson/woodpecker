@@ -2,7 +2,7 @@ package com.davehowson.woodpecker.payload;
 
 import java.util.List;
 
-public interface ApiRequest {
+public interface TaggedRequest {
 
     List<String> getTagNames();
 

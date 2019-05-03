@@ -3,19 +3,14 @@ package com.davehowson.woodpecker.payload;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
-public class TaskCompleteResponse {
-
+public class TaskUpdateRequest extends TaskRequest {
     @NotNull
-    private long taskId;
+    private Long id;
 
-    @NotNull
-    private boolean status;
-
-    @NotNull
-    private String message;
-
+    private Boolean isComplete;
 }

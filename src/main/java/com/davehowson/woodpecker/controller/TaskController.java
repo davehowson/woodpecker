@@ -42,7 +42,7 @@ public class TaskController {
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> createTask(@Valid @RequestBody TaskRequest taskRequest,
                                         @CurrentUser UserPrincipal currentUser ) {
-        Task task = taskService.createTask(taskRequest, currentUser.getUsername());
+        Task task = taskService.createTask(taskRequest, currentUser.getEmail());
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{taskId}")
@@ -53,8 +53,29 @@ public class TaskController {
     }
 
     @PostMapping("/task/complete")
+    @PreAuthorize("hasRole('USER')")
     public TaskCompleteResponse completeTask(@RequestBody TaskCompleteRequest taskCompleteRequest){
         return taskService.completeTask(taskCompleteRequest);
+    }
+
+    @PatchMapping
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> updateNote(@Valid @RequestBody TaskUpdateRequest taskUpdateRequest,
+                                        @CurrentUser UserPrincipal currentUser) {
+        Task note = taskService.updateTask(taskUpdateRequest, currentUser.getEmail());
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest().path("/{taskId}")
+                .buildAndExpand(note.getId()).toUri();
+
+        return ResponseEntity.created(location)
+                .body(new ApiResponse(true, "Task Updated Successfully"));
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('USER')")
+    public ApiResponse deleteNote(@PathVariable("id") Long id){
+        return taskService.deleteTask(id);
     }
 
 }

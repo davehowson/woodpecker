@@ -7,15 +7,7 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
-public class TaskCompleteResponse {
-
+public class NoteUpdateRequest extends NoteRequest {
     @NotNull
-    private long taskId;
-
-    @NotNull
-    private boolean status;
-
-    @NotNull
-    private String message;
-
+    private Long id;
 }

@@ -3,10 +3,9 @@ package com.davehowson.woodpecker.payload;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.time.LocalDate;
 import java.util.List;
 
-public class NoteRequest implements ApiRequest {
+public class NoteRequest implements TaggedRequest {
 
     @NotBlank
     @Size(max = 100)
