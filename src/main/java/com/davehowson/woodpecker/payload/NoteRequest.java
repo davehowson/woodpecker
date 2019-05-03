@@ -6,23 +6,24 @@ import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
 
-public class TaskRequest implements ApiRequest {
+public class NoteRequest implements ApiRequest {
+    @NotBlank
     @Size(max = 100)
-    private String date;
+    private String title;
 
     @NotBlank
-    @Size(max = 200)
+    @Size(max = 2000)
     private String description;
 
     @NotNull
     private List<String> tagNames;
 
-    public LocalDate getDate() {
-        return LocalDate.parse(date);
+    public String getTitle() {
+        return title;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getDescription() {
@@ -33,10 +34,12 @@ public class TaskRequest implements ApiRequest {
         this.description = description;
     }
 
+    @Override
     public List<String> getTagNames() {
         return tagNames;
     }
 
+    @Override
     public void setTagNames(List<String> tagNames) {
         this.tagNames = tagNames;
     }

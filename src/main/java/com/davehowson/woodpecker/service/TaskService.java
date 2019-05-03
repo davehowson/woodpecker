@@ -28,11 +28,8 @@ import java.util.*;
 
 @Service
 public class TaskService {
-
     private final TaskRepository taskRepository;
-
     private final UserRepository userRepository;
-
     private final TagRepository tagRepository;
 
     @Autowired
@@ -83,8 +80,12 @@ public class TaskService {
         task.setDate(taskRequest.getDate());
         Set<Tag> tags = new HashSet<>();
         taskRequest.getTagNames().forEach((v) -> {
-            Tag tag  = tagRepository.findByName(TagName.valueOf(v)).orElseThrow(() -> new AppException("Tag not found"));
-            tags.add(tag);
+            try {
+                Tag tag  = tagRepository.findByName(TagName.valueOf(v)).orElseThrow(() -> new AppException("Tag not found"));
+                tags.add(tag);
+            } catch (IllegalArgumentException ex) {
+                throw new AppException("Tag not found");
+            }
         });
 
         task.setTags(tags);

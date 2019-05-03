@@ -1,11 +1,11 @@
 package com.davehowson.woodpecker.controller;
 
-import com.davehowson.woodpecker.model.Task;
+import com.davehowson.woodpecker.model.Note;
 import com.davehowson.woodpecker.payload.*;
 import com.davehowson.woodpecker.security.CurrentUser;
 import com.davehowson.woodpecker.security.UserPrincipal;
+import com.davehowson.woodpecker.service.NoteService;
 import com.davehowson.woodpecker.util.AppConstants;
-import com.davehowson.woodpecker.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,43 +18,35 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 @RestController
-@RequestMapping("/api/tasks")
-public class TaskController {
+@RequestMapping("/api/notes")
+public class NoteController {
 
-    private TaskService taskService;
+    private NoteService noteService;
 
     @Autowired
-    public TaskController(TaskService taskService){
-        this.taskService = taskService;
+    public NoteController(NoteService noteService) {
+        this.noteService = noteService;
     }
 
     @GetMapping
-    public PagedResponse<TaskResponse> getTasks(@CurrentUser UserPrincipal currentUser,
-                                                @RequestParam String date,
+    public PagedResponse<NoteResponse> getNotes(@CurrentUser UserPrincipal currentUser,
                                                 @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
                                                 @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate localDate = LocalDate.parse(date, formatter);
-        return taskService.getTasksCreatedBy(currentUser, localDate, page, size);
+        return noteService.getNotesCreatedBy(currentUser, page, size);
     }
 
     @PostMapping
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> createTask(@Valid @RequestBody TaskRequest taskRequest,
+    public ResponseEntity<?> createNote(@Valid @RequestBody NoteRequest noteRequest,
                                         @CurrentUser UserPrincipal currentUser ) {
-        Task task = taskService.createTask(taskRequest, currentUser.getUsername());
+        Note note = noteService.createNote(noteRequest, currentUser.getUsername());
 
         URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest().path("/{taskId}")
-                .buildAndExpand(task.getId()).toUri();
+                .fromCurrentRequest().path("/{noteId}")
+                .buildAndExpand(note.getId()).toUri();
 
         return ResponseEntity.created(location)
-                .body(new ApiResponse(true, "Task Created Successfully"));
-    }
-
-    @PostMapping("/task/complete")
-    public TaskCompleteResponse completeTask(@RequestBody TaskCompleteRequest taskCompleteRequest){
-        return taskService.completeTask(taskCompleteRequest);
+                .body(new ApiResponse(true, "Note Created Successfully"));
     }
 
 }
