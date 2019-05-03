@@ -1,9 +1,9 @@
 package com.davehowson.woodpecker.util;
 
 import com.davehowson.woodpecker.model.*;
-import com.davehowson.woodpecker.payload.NoteResponse;
-import com.davehowson.woodpecker.payload.TaskResponse;
-import com.davehowson.woodpecker.payload.UserSummary;
+import com.davehowson.woodpecker.payload.note.NoteResponse;
+import com.davehowson.woodpecker.payload.task.TaskResponse;
+import com.davehowson.woodpecker.payload.user.UserSummary;
 
 
 public class ModelMapper {

@@ -5,6 +5,7 @@ import com.davehowson.woodpecker.model.Tag;
 import com.davehowson.woodpecker.model.Task;
 import com.davehowson.woodpecker.model.User;
 import com.davehowson.woodpecker.payload.*;
+import com.davehowson.woodpecker.payload.task.*;
 import com.davehowson.woodpecker.repository.TagRepository;
 import com.davehowson.woodpecker.repository.TaskRepository;
 import com.davehowson.woodpecker.repository.UserRepository;

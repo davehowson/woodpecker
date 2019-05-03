@@ -1,4 +1,4 @@
-package com.davehowson.woodpecker.payload;
+package com.davehowson.woodpecker.payload.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,4 +1,4 @@
-package com.davehowson.woodpecker.payload;
+package com.davehowson.woodpecker.payload.task;
 
 import lombok.Getter;
 import lombok.Setter;

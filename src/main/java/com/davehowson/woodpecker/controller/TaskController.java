@@ -2,6 +2,7 @@ package com.davehowson.woodpecker.controller;
 
 import com.davehowson.woodpecker.model.Task;
 import com.davehowson.woodpecker.payload.*;
+import com.davehowson.woodpecker.payload.task.*;
 import com.davehowson.woodpecker.security.CurrentUser;
 import com.davehowson.woodpecker.security.UserPrincipal;
 import com.davehowson.woodpecker.util.AppConstants;

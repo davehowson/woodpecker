@@ -1,6 +1,7 @@
-package com.davehowson.woodpecker.payload;
+package com.davehowson.woodpecker.payload.task;
 
 import com.davehowson.woodpecker.model.Tag;
+import com.davehowson.woodpecker.payload.user.UserSummary;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,11 +11,12 @@ import java.util.Set;
 
 @Getter
 @Setter
-public class NoteResponse {
+public class TaskResponse {
     private Long id;
-    private String title;
+    private LocalDate date;
     private String description;
     private Set<Tag> tags;
     private UserSummary createdBy;
     private Instant creationDateTime;
+    private Boolean isComplete;
 }

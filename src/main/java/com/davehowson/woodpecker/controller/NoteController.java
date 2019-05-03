@@ -2,6 +2,9 @@ package com.davehowson.woodpecker.controller;
 
 import com.davehowson.woodpecker.model.Note;
 import com.davehowson.woodpecker.payload.*;
+import com.davehowson.woodpecker.payload.note.NoteRequest;
+import com.davehowson.woodpecker.payload.note.NoteResponse;
+import com.davehowson.woodpecker.payload.note.NoteUpdateRequest;
 import com.davehowson.woodpecker.security.CurrentUser;
 import com.davehowson.woodpecker.security.UserPrincipal;
 import com.davehowson.woodpecker.service.NoteService;

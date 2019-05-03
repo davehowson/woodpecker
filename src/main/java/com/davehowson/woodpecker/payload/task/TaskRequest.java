@@ -1,4 +1,6 @@
-package com.davehowson.woodpecker.payload;
+package com.davehowson.woodpecker.payload.task;
+
+import com.davehowson.woodpecker.payload.TaggedRequest;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;

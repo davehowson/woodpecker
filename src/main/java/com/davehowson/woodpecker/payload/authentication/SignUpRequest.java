@@ -1,4 +1,4 @@
-package com.davehowson.woodpecker.payload;
+package com.davehowson.woodpecker.payload.authentication;
 
 import lombok.Getter;
 import lombok.Setter;

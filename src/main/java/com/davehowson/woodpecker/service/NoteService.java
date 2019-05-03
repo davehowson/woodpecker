@@ -1,9 +1,11 @@
 package com.davehowson.woodpecker.service;
 
-import com.davehowson.woodpecker.exception.AppException;
 import com.davehowson.woodpecker.exception.ResourceNotFoundException;
 import com.davehowson.woodpecker.model.*;
 import com.davehowson.woodpecker.payload.*;
+import com.davehowson.woodpecker.payload.note.NoteRequest;
+import com.davehowson.woodpecker.payload.note.NoteResponse;
+import com.davehowson.woodpecker.payload.note.NoteUpdateRequest;
 import com.davehowson.woodpecker.repository.NoteRepository;
 import com.davehowson.woodpecker.repository.TagRepository;
 import com.davehowson.woodpecker.repository.UserRepository;
