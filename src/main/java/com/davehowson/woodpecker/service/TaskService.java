@@ -1,10 +1,7 @@
 package com.davehowson.woodpecker.service;
 
-import com.davehowson.woodpecker.exception.AppException;
-import com.davehowson.woodpecker.exception.BadRequestException;
 import com.davehowson.woodpecker.exception.ResourceNotFoundException;
 import com.davehowson.woodpecker.model.Tag;
-import com.davehowson.woodpecker.model.TagName;
 import com.davehowson.woodpecker.model.Task;
 import com.davehowson.woodpecker.model.User;
 import com.davehowson.woodpecker.payload.*;
@@ -12,7 +9,6 @@ import com.davehowson.woodpecker.repository.TagRepository;
 import com.davehowson.woodpecker.repository.TaskRepository;
 import com.davehowson.woodpecker.repository.UserRepository;
 import com.davehowson.woodpecker.security.UserPrincipal;
-import com.davehowson.woodpecker.util.AppConstants;
 import com.davehowson.woodpecker.util.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,16 +23,14 @@ import java.time.LocalDate;
 import java.util.*;
 
 @Service
-public class TaskService {
+public class TaskService extends TaggedService {
+
     private final TaskRepository taskRepository;
-    private final UserRepository userRepository;
-    private final TagRepository tagRepository;
 
     @Autowired
-    public TaskService(TaskRepository taskRepository, UserRepository userRepository, TagRepository tagRepository){
+    public TaskService(TagRepository tagRepository, UserRepository userRepository, TaskRepository taskRepository) {
+        super(tagRepository, userRepository);
         this.taskRepository = taskRepository;
-        this.userRepository = userRepository;
-        this.tagRepository = tagRepository;
     }
 
     private static final Logger logger = LoggerFactory.getLogger(TaskService.class);
@@ -61,15 +55,6 @@ public class TaskService {
                 tasks.getSize(), tasks.getTotalElements(), tasks.getTotalPages(), tasks.isLast());
     }
 
-    private void validatePageNumberAndSize(int page, int size) {
-        if(page < 0) {
-            throw new BadRequestException("Page number cannot be less than zero.");
-        }
-
-        if(size > AppConstants.MAX_PAGE_SIZE) {
-            throw new BadRequestException("Page size must not be greater than " + AppConstants.MAX_PAGE_SIZE);
-        }
-    }
 
     public Task createTask(TaskRequest taskRequest, String email) {
         Task task = new Task();
@@ -78,15 +63,7 @@ public class TaskService {
 
         task.setDescription(taskRequest.getDescription());
         task.setDate(taskRequest.getDate());
-        Set<Tag> tags = new HashSet<>();
-        taskRequest.getTagNames().forEach((v) -> {
-            try {
-                Tag tag  = tagRepository.findByName(TagName.valueOf(v)).orElseThrow(() -> new AppException("Tag not found"));
-                tags.add(tag);
-            } catch (IllegalArgumentException ex) {
-                throw new AppException("Tag not found");
-            }
-        });
+        Set<Tag> tags = mapTags(taskRequest);
 
         task.setTags(tags);
         task.setUser(user);

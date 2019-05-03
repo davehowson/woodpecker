@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class NoteRequest implements ApiRequest {
+
     @NotBlank
     @Size(max = 100)
     private String title;
@@ -39,7 +40,6 @@ public class NoteRequest implements ApiRequest {
         return tagNames;
     }
 
-    @Override
     public void setTagNames(List<String> tagNames) {
         this.tagNames = tagNames;
     }

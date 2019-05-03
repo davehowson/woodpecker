@@ -1,13 +1,9 @@
 package com.davehowson.woodpecker.util;
 
-import com.davehowson.woodpecker.exception.AppException;
 import com.davehowson.woodpecker.model.*;
-import com.davehowson.woodpecker.payload.ApiRequest;
 import com.davehowson.woodpecker.payload.NoteResponse;
 import com.davehowson.woodpecker.payload.TaskResponse;
 import com.davehowson.woodpecker.payload.UserSummary;
-import com.davehowson.woodpecker.repository.TagRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 
 
 public class ModelMapper {

@@ -33,6 +33,7 @@ public class TaskRequest implements ApiRequest {
         this.description = description;
     }
 
+    @Override
     public List<String> getTagNames() {
         return tagNames;
     }

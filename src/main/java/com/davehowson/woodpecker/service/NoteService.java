@@ -1,7 +1,5 @@
 package com.davehowson.woodpecker.service;
 
-import com.davehowson.woodpecker.exception.AppException;
-import com.davehowson.woodpecker.exception.BadRequestException;
 import com.davehowson.woodpecker.exception.ResourceNotFoundException;
 import com.davehowson.woodpecker.model.*;
 import com.davehowson.woodpecker.payload.*;
@@ -9,7 +7,6 @@ import com.davehowson.woodpecker.repository.NoteRepository;
 import com.davehowson.woodpecker.repository.TagRepository;
 import com.davehowson.woodpecker.repository.UserRepository;
 import com.davehowson.woodpecker.security.UserPrincipal;
-import com.davehowson.woodpecker.util.AppConstants;
 import com.davehowson.woodpecker.util.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,23 +15,19 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Service
-public class NoteService {
+public class NoteService extends TaggedService {
+
     private final NoteRepository noteRepository;
-    private final UserRepository userRepository;
-    private final TagRepository tagRepository;
 
     @Autowired
-    public NoteService(NoteRepository noteRepository, UserRepository userRepository, TagRepository tagRepository) {
+    public NoteService(TagRepository tagRepository, UserRepository userRepository, NoteRepository noteRepository) {
+        super(tagRepository, userRepository);
         this.noteRepository = noteRepository;
-        this.userRepository = userRepository;
-        this.tagRepository = tagRepository;
     }
 
     public PagedResponse<NoteResponse> getNotesCreatedBy(UserPrincipal currentUser, int page, int size) {
@@ -57,15 +50,6 @@ public class NoteService {
                 notes.getSize(), notes.getTotalElements(), notes.getTotalPages(), notes.isLast());
     }
 
-    private void validatePageNumberAndSize(int page, int size) {
-        if(page < 0) {
-            throw new BadRequestException("Page number cannot be less than zero.");
-        }
-
-        if(size > AppConstants.MAX_PAGE_SIZE) {
-            throw new BadRequestException("Page size must not be greater than " + AppConstants.MAX_PAGE_SIZE);
-        }
-    }
 
     public Note createNote(NoteRequest noteRequest, String email) {
         Note note = new Note();
@@ -75,15 +59,7 @@ public class NoteService {
         note.setTitle(noteRequest.getTitle());
         note.setDescription(noteRequest.getDescription());
 
-        Set<Tag> tags = new HashSet<>();
-        noteRequest.getTagNames().forEach((v) -> {
-            try {
-                Tag tag  = tagRepository.findByName(TagName.valueOf(v)).orElseThrow(() -> new AppException("Tag not found"));
-                tags.add(tag);
-            } catch (IllegalArgumentException ex) {
-                throw new AppException("Tag not found");
-            }
-        });
+        Set<Tag> tags = mapTags(noteRequest);
 
         note.setTags(tags);
         note.setUser(user);
