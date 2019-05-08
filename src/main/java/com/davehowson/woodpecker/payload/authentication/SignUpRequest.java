@@ -9,18 +9,10 @@ import javax.validation.constraints.Size;
 
 @Getter
 @Setter
-public class SignUpRequest {
+public class SignUpRequest extends AuthRequest {
 
     @NotBlank
     @Size(min = 4, max = 40)
     private String name;
 
-    @NotBlank
-    @Size(max = 40)
-    @Email
-    private String email;
-
-    @NotBlank
-    @Size(min = 6, max = 20)
-    private String password;
 }

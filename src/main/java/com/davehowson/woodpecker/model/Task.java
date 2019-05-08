@@ -8,6 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,12 +24,15 @@ public class Task extends UserDateAudit {
     @Column
     private LocalDate date;
 
+    @Column
+    private LocalTime time;
+
     @NotBlank
     @Size(max = 200)
     private String description;
 
     @Column
-    private boolean isComplete = false;
+    private boolean complete = false;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "userId", nullable = false)

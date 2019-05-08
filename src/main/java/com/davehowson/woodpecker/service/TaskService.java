@@ -11,17 +11,12 @@ import com.davehowson.woodpecker.repository.TaskRepository;
 import com.davehowson.woodpecker.repository.UserRepository;
 import com.davehowson.woodpecker.security.UserPrincipal;
 import com.davehowson.woodpecker.util.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class TaskService extends TaggedService {
@@ -34,28 +29,35 @@ public class TaskService extends TaggedService {
         this.taskRepository = taskRepository;
     }
 
-    private static final Logger logger = LoggerFactory.getLogger(TaskService.class);
-
-    public PagedResponse<TaskResponse> getTasksCreatedBy(UserPrincipal currentUser, LocalDate date, int page, int size) {
-        validatePageNumberAndSize(page, size);
-        String email = currentUser.getEmail();
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
-
-        Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdAt");
-        Page<Task> tasks = taskRepository.findByCreatedByAndDateIs(user.getId(), date, pageable);
-
-        if (tasks.getNumberOfElements() == 0) {
-            return new PagedResponse<>(Collections.emptyList(), tasks.getNumber(),
-                    tasks.getSize(), tasks.getTotalElements(), tasks.getTotalPages(), tasks.isLast());
-        }
-
-        List<TaskResponse> taskResponses = tasks.map(ModelMapper::mapTasktoTaskResponse).getContent();
-
-        return new PagedResponse<>(taskResponses, tasks.getNumber(),
-                tasks.getSize(), tasks.getTotalElements(), tasks.getTotalPages(), tasks.isLast());
+    public List<TaskResponse> getTaskListOnDate(UserPrincipal currentUser, LocalDate date) {
+        User user = getUser(currentUser);
+        Set<Task> tasks = taskRepository.findByCreatedByAndDateIsOrderByCompleteAsc(user.getId(), date);
+        return tasks.stream()
+                .map(ModelMapper::mapTasktoTaskResponse).collect(Collectors.toList());
     }
 
+    public List<TaskResponse> getTaskListInbox(UserPrincipal currentUser, LocalDate date) {
+        User user = getUser(currentUser);
+        List<Task> tasks = taskRepository.findByCreatedByAndCompleteIsFalseAndDateBefore(user.getId(), date);
+        return tasks.stream()
+                .map(ModelMapper::mapTasktoTaskResponse).collect(Collectors.toList());
+    }
+
+    public List<TaskResponse> getTaskListUpcoming(UserPrincipal currentUser, LocalDate start, LocalDate end) {
+        User user = getUser(currentUser);
+        List<Task> tasks = taskRepository.findByCreatedByAndDateBetweenOrderByDateAsc(user.getId(), start, end);
+        return tasks.stream()
+                .filter(task -> !task.isComplete())
+                .map(ModelMapper::mapTasktoTaskResponse).collect(Collectors.toList());
+    }
+
+    public List<TaskResponse> getTaskListCompleted(UserPrincipal currentUser, LocalDate start, LocalDate end) {
+        User user = getUser(currentUser);
+        List<Task> tasks = taskRepository.findByCreatedByAndDateBetweenOrderByDateAsc(user.getId(), start, end);
+        return tasks.stream()
+                .filter(Task::isComplete)
+                .map(ModelMapper::mapTasktoTaskResponse).collect(Collectors.toList());
+    }
 
     public Task createTask(TaskRequest taskRequest, String email) {
         Task task = new Task();
@@ -64,6 +66,7 @@ public class TaskService extends TaggedService {
 
         task.setDescription(taskRequest.getDescription());
         task.setDate(taskRequest.getDate());
+        task.setTime(taskRequest.getTime());
         Set<Tag> tags = mapTags(taskRequest);
 
         task.setTags(tags);
@@ -92,7 +95,7 @@ public class TaskService extends TaggedService {
                 .orElseThrow(() -> new ResourceNotFoundException("Note", "id", taskUpdateRequest.getId()));
         task.setDescription(taskUpdateRequest.getDescription());
         task.setDate(taskUpdateRequest.getDate());
-        task.setComplete(taskUpdateRequest.getIsComplete());
+        task.setComplete(taskUpdateRequest.getComplete());
         Set<Tag> tags = mapTags(taskUpdateRequest);
         task.setTags(tags);
         taskRepository.save(task);
@@ -104,4 +107,9 @@ public class TaskService extends TaggedService {
         return new ApiResponse(true, "Task Successfully Deleted");
     }
 
+    private User getUser(UserPrincipal currentUser) {
+        String email = currentUser.getEmail();
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
+    }
 }

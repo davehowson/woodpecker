@@ -1,16 +1,16 @@
 package com.davehowson.woodpecker.payload.authentication;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class JwtAuthenticationResponse {
 
-    private String accessToken;
-    private String tokenType = "Bearer";
-
-    public JwtAuthenticationResponse(String accessToken) {
-        this.accessToken = accessToken;
-    }
+    private Long id;
+    private String email;
+    private String name;
+    private String token;
 }

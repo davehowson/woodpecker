@@ -1,20 +1,19 @@
 package com.davehowson.woodpecker.controller;
 
-import com.davehowson.woodpecker.config.SecurityConfig;
 import com.davehowson.woodpecker.exception.AppException;
 import com.davehowson.woodpecker.model.Role;
 import com.davehowson.woodpecker.model.RoleName;
 import com.davehowson.woodpecker.model.User;
 import com.davehowson.woodpecker.payload.ApiResponse;
-import com.davehowson.woodpecker.payload.authentication.JwtAuthenticationResponse;
-import com.davehowson.woodpecker.payload.authentication.LoginRequest;
-import com.davehowson.woodpecker.payload.authentication.PasswordRequest;
-import com.davehowson.woodpecker.payload.authentication.SignUpRequest;
+import com.davehowson.woodpecker.payload.authentication.*;
 import com.davehowson.woodpecker.repository.RoleRepository;
 import com.davehowson.woodpecker.repository.UserRepository;
 import com.davehowson.woodpecker.security.CurrentUser;
 import com.davehowson.woodpecker.security.JwtTokenProvider;
 import com.davehowson.woodpecker.security.UserPrincipal;
+import com.davehowson.woodpecker.service.AuthService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,10 +24,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
-import java.net.URI;
 import java.util.Collections;
 
 @RestController
@@ -40,32 +37,25 @@ public class AuthController {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider tokenProvider;
+    private final AuthService authService;
+    private Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     @Autowired
     public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository,
                           RoleRepository roleRepository, PasswordEncoder passwordEncoder,
-                          JwtTokenProvider tokenProvider) {
+                          JwtTokenProvider tokenProvider, AuthService authService) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.tokenProvider = tokenProvider;
+        this.authService = authService;
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody AuthRequest authRequest) {
 
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginRequest.getEmail(),
-                        loginRequest.getPassword()
-                )
-        );
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        String jwt = tokenProvider.generateToken(authentication);
-        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
+        return authService.generateJwtTokenForRequest(authRequest);
     }
 
     @PostMapping("/register")
@@ -78,22 +68,13 @@ public class AuthController {
 
         User user = new User(signUpRequest.getName(),
                 signUpRequest.getEmail(), signUpRequest.getPassword());
-
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-
         Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
                 .orElseThrow(() -> new AppException("User Role not set."));
-
         user.setRoles(Collections.singleton(userRole));
+        userRepository.save(user);
 
-        User result = userRepository.save(user);
-
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentContextPath().path("/api/users/{id}")
-                .buildAndExpand(result.getId()).toUri();
-
-        return ResponseEntity.created(location).body(new ApiResponse(true, "User registered successfully"));
+        return authService.generateJwtTokenForRequest(signUpRequest);
     }
 
     @PostMapping("/updatePassword")

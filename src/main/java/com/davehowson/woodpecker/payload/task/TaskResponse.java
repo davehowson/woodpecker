@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Set;
 
 @Getter
@@ -14,9 +15,10 @@ import java.util.Set;
 public class TaskResponse {
     private Long id;
     private LocalDate date;
+    private LocalTime time;
     private String description;
     private Set<Tag> tags;
     private UserSummary createdBy;
     private Instant creationDateTime;
-    private Boolean isComplete;
+    private Boolean complete;
 }

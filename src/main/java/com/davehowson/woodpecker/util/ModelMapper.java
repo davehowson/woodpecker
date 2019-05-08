@@ -13,7 +13,8 @@ public class ModelMapper {
         taskResponse.setId(task.getId());
         taskResponse.setDescription(task.getDescription());
         taskResponse.setDate(task.getDate());
-        taskResponse.setIsComplete(task.isComplete());
+        taskResponse.setTime(task.getTime());
+        taskResponse.setComplete(task.isComplete());
         taskResponse.setTags(task.getTags());
         taskResponse.setCreationDateTime(task.getCreatedAt());
 

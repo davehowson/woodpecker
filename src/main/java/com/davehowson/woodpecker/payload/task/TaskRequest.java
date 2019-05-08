@@ -6,11 +6,15 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 public class TaskRequest implements TaggedRequest {
     @Size(max = 100)
     private String date;
+
+    @Size(max = 100)
+    private String time;
 
     @NotBlank
     @Size(max = 200)
@@ -25,6 +29,18 @@ public class TaskRequest implements TaggedRequest {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public LocalTime getTime() {
+        if (time == null){
+            return null;
+        }
+
+        return LocalTime.parse(time);
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public String getDescription() {

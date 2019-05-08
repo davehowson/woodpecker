@@ -11,5 +11,5 @@ public class TaskUpdateRequest extends TaskRequest {
     @NotNull
     private Long id;
 
-    private Boolean isComplete;
+    private Boolean complete;
 }
