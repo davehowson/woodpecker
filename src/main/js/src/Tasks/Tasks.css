@@ -1,0 +1,97 @@
+.task-nav {
+    font-size: 16px;
+    margin-bottom: 60px !important;
+    list-style: none;
+    color: #777777 !important;
+}
+
+.task-nav li {
+    cursor: pointer;
+    margin: 15px 0;
+    padding: 5px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.task-nav .active {
+    color: #DF021E;
+    border-bottom: 1px solid #e1adb3;
+    -webkit-transition:border-bottom 1s, color 1s;
+    -moz-transition:border-bottom 1s, color 1s;
+    -ms-transition:border-bottom 1s, color 1s;
+     -o-transition:border-bottom 1s, color 1s;
+        transition:border-bottom 1s, color 1s;
+    
+
+}
+
+.task-nav li:hover {
+    border-bottom: 1px solid #DF021E;
+    -webkit-transition:border-bottom 1s, color 1s;
+    -moz-transition:border-bottom 1s, color 1s;
+    -ms-transition:border-bottom 1s, color 1s;
+     -o-transition:border-bottom 1s, color 1s;
+        transition:border-bottom 1s, color 1s;
+
+}
+
+.task-nav-icon {
+    margin-right: 20px;
+    font-size: 20px;
+}
+
+.task-nav-text {
+    vertical-align: middle !important;
+}
+
+.tasks-left-col {
+    margin-top: 30px;
+}
+
+.tasks-right-col {
+    background-color: white;
+}
+
+.task-list-container {
+    min-height: 460px;
+    width: 65%;
+    max-height: 90%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.task-calendar {
+    height: 330px;
+}
+
+.DayPicker {
+    flex-direction: row;
+    font-size: 2.5rem;
+    margin: 0;
+    padding: 0;
+    width: 85%;
+    height: 100%;
+}
+
+.DayPicker-Day {
+    border-radius: 0 !important;
+}
+
+.DayPicker-Months {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+}
+
+.DayPicker-Caption {
+    color: #DB0606;
+}
+
+
+.DayPicker-Day--selected:not(.DayPicker-Day--disabled):not(.DayPicker-Day--outside) {
+    background-color: #cb2424 !important;
+}
+
+.DayPicker-Day--selected:not(.DayPicker-Day--disabled):not(.DayPicker-Day--outside):hover {
+    background-color: #DB0606 !important;
+}

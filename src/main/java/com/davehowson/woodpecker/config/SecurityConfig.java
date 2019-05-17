@@ -85,6 +85,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .permitAll()
                     .antMatchers("/api/user/checkEmailAvailability")
                         .permitAll()
+                    .antMatchers("/app/*", "/login", "/register")
+                        .permitAll()
                     .anyRequest()
                         .authenticated();
 

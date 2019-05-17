@@ -1,0 +1,29 @@
+#user-dropdown-div {
+    display: inline-block;
+}
+
+.navbar {
+    height: 4.5rem !important;
+}
+
+.navbar-brand {
+    font-family: 'Berkshire Swash', cursive;
+    color: #DF021E !important;
+    text-align: center;
+    font-size: 30px !important;
+    margin-left: 70px;
+}
+
+#user-dropdown-text {
+    margin-right: 5px;
+}
+
+#menu {
+    display: block;
+}
+
+@media (min-width: 768px) {
+    #menu {
+        display: none;
+    } 
+} 
