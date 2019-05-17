@@ -10,7 +10,6 @@ import { authenticationService } from '@/Services';
 import { history } from '@/Utilities';
 
 import '@/Layouts/Header.css';
-import Logo from '@/logo.png';
 
 const Header = (props) => {
     const [currentUser, setCurrentUser] = useState(authenticationService.currentUserValue);
