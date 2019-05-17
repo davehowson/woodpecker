@@ -4,6 +4,6 @@ import java.util.List;
 
 public interface TaggedRequest {
 
-    List<String> getTagNames();
+    List<String> getTags();
 
 }

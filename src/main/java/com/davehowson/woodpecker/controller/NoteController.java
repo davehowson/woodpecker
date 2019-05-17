@@ -9,6 +9,8 @@ import com.davehowson.woodpecker.security.CurrentUser;
 import com.davehowson.woodpecker.security.UserPrincipal;
 import com.davehowson.woodpecker.service.NoteService;
 import com.davehowson.woodpecker.util.AppConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,10 +25,19 @@ import java.net.URI;
 public class NoteController {
 
     private NoteService noteService;
+    private Logger logger = LoggerFactory.getLogger(NoteController.class);
 
     @Autowired
     public NoteController(NoteService noteService) {
         this.noteService = noteService;
+    }
+
+    @GetMapping("/tag")
+    public PagedResponse<NoteResponse> getNotesByTag(@CurrentUser UserPrincipal currentUser,
+                                                     @RequestParam(value = "tag", defaultValue = "ALL") String tag,
+                                                @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+                                                @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
+        return noteService.getNotesCreatedByAndTagged(currentUser, tag, page, size);
     }
 
     @GetMapping
@@ -34,6 +45,13 @@ public class NoteController {
                                                 @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
                                                 @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
         return noteService.getNotesCreatedBy(currentUser, page, size);
+    }
+
+    @GetMapping("/note")
+    @PreAuthorize("hasRole('USER')")
+    public NoteResponse getNote(@CurrentUser UserPrincipal currentUser,
+                                     @RequestParam(value = "noteId") Long noteId) {
+        return noteService.getNote(currentUser, noteId);
     }
 
     @PostMapping

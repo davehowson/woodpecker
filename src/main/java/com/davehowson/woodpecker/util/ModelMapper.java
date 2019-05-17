@@ -4,10 +4,11 @@ import com.davehowson.woodpecker.model.*;
 import com.davehowson.woodpecker.payload.note.NoteResponse;
 import com.davehowson.woodpecker.payload.task.TaskResponse;
 import com.davehowson.woodpecker.payload.user.UserSummary;
+import org.apache.commons.lang3.StringUtils;
 
 
 public class ModelMapper {
-    public static TaskResponse mapTasktoTaskResponse(Task task) {
+    public static TaskResponse mapTaskToTaskResponse(Task task) {
         TaskResponse taskResponse = new TaskResponse();
 
         taskResponse.setId(task.getId());
@@ -25,7 +26,15 @@ public class ModelMapper {
         return taskResponse;
     }
 
-    public static NoteResponse mapNotetoNoteResponse(Note note) {
+    public static NoteResponse mapNoteToNoteResponseAbbr(Note note) {
+
+        NoteResponse noteResponse = mapNoteToNoteResponse(note);
+        noteResponse.setDescription(StringUtils.abbreviate(note.getDescription(), 250));
+
+        return noteResponse;
+    }
+
+    public static NoteResponse mapNoteToNoteResponse(Note note) {
         NoteResponse noteResponse = new NoteResponse();
 
         noteResponse.setId(note.getId());

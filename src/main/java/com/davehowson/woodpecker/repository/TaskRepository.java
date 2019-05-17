@@ -15,6 +15,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     Optional<Task> findById(Long taskId);
     void deleteById(Long taskId);
     Set<Task> findByCreatedByAndDateIsOrderByCompleteAsc(Long userId, LocalDate date);
-    List<Task> findByCreatedByAndCompleteIsFalseAndDateBefore(Long userId, LocalDate date);
+    List<Task> findByCreatedByAndCompleteIsFalseAndDateBeforeOrDateIsNullOrderByCreatedAt(Long userId, LocalDate date);
     List<Task> findByCreatedByAndDateBetweenOrderByDateAsc(Long id, LocalDate start, LocalDate end);
+    List<Task> findTop6ByCreatedByAndDateBetweenOrderByDateAsc(Long id, LocalDate start, LocalDate end);
 }

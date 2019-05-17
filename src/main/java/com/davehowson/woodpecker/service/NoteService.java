@@ -1,5 +1,6 @@
 package com.davehowson.woodpecker.service;
 
+import com.davehowson.woodpecker.exception.AppException;
 import com.davehowson.woodpecker.exception.ResourceNotFoundException;
 import com.davehowson.woodpecker.model.*;
 import com.davehowson.woodpecker.payload.*;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -40,17 +42,44 @@ public class NoteService extends TaggedService {
                 .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
 
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdAt");
-        Page<Note> notes = noteRepository.findByCreatedByOrderByCreatedAtAsc(user.getId(), pageable);
+        Page<Note> notes = noteRepository.findByCreatedByOrderByCreatedAtDesc(user.getId(), pageable);
 
+        return returnPagedResponse(notes);
+    }
+
+    public PagedResponse<NoteResponse> getNotesCreatedByAndTagged(UserPrincipal currentUser, String tagName, int page, int size) {
+        validatePageNumberAndSize(page, size);
+        String email = currentUser.getEmail();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
+
+        Tag tag  = tagRepository.findByName(TagName.valueOf(tagName)).orElseThrow(() -> new AppException("Tag not found"));
+
+        Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdAt");
+        Page<Note> notes = noteRepository.findByCreatedByAndTagsContainingOrderByCreatedAtDesc(user.getId(), tag, pageable);
+
+        return returnPagedResponse(notes);
+    }
+
+    private PagedResponse<NoteResponse> returnPagedResponse(Page<Note> notes) {
         if (notes.getNumberOfElements() == 0) {
             return new PagedResponse<>(Collections.emptyList(), notes.getNumber(),
                     notes.getSize(), notes.getTotalElements(), notes.getTotalPages(), notes.isLast());
         }
 
-        List<NoteResponse> taskResponses = notes.map(ModelMapper::mapNotetoNoteResponse).getContent();
+        List<NoteResponse> taskResponses = notes.map(ModelMapper::mapNoteToNoteResponseAbbr).getContent();
 
         return new PagedResponse<>(taskResponses, notes.getNumber(),
                 notes.getSize(), notes.getTotalElements(), notes.getTotalPages(), notes.isLast());
+    }
+
+    public NoteResponse getNote(UserPrincipal currentUser, Long noteId) {
+        String email = currentUser.getEmail();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
+        Note note = noteRepository.findByIdAndCreatedBy(noteId, user.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Note", "note id", noteId));
+        return ModelMapper.mapNoteToNoteResponse(note);
     }
 
 

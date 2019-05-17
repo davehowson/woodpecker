@@ -21,9 +21,12 @@ public class TaskRequest implements TaggedRequest {
     private String description;
 
     @NotNull
-    private List<String> tagNames;
+    private List<String> tags;
 
     public LocalDate getDate() {
+        if (date == null) {
+            return null;
+        }
         return LocalDate.parse(date);
     }
 
@@ -32,7 +35,7 @@ public class TaskRequest implements TaggedRequest {
     }
 
     public LocalTime getTime() {
-        if (time == null){
+        if (time == null) {
             return null;
         }
 
@@ -52,11 +55,11 @@ public class TaskRequest implements TaggedRequest {
     }
 
     @Override
-    public List<String> getTagNames() {
-        return tagNames;
+    public List<String> getTags() {
+        return tags;
     }
 
-    public void setTagNames(List<String> tagNames) {
-        this.tagNames = tagNames;
+    public void setTags(List<String> tags) {
+        this.tags = tags;
     }
 }

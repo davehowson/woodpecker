@@ -64,6 +64,15 @@ public class TaskController {
         return taskService.getTaskListCompleted(currentUser, start, end);
     }
 
+    @GetMapping("/dashboard")
+    @PreAuthorize("hasRole('USER')")
+    public List<TaskResponse> getTasksDashboard(@CurrentUser UserPrincipal currentUser) {
+        LocalDate start = LocalDate.now();
+        LocalDate end = LocalDate.now().plusDays(14);
+        return taskService.getTaskListUpcomingDashboard(currentUser, start, end);
+    }
+
+
     @PostMapping
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> createTask(@Valid @RequestBody TaskRequest taskRequest,

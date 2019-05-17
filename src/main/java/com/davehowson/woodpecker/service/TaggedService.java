@@ -14,7 +14,7 @@ import java.util.Set;
 
 public abstract class TaggedService {
 
-    private TagRepository tagRepository;
+    TagRepository tagRepository;
     UserRepository userRepository;
 
     public TaggedService(TagRepository tagRepository, UserRepository userRepository) {
@@ -35,7 +35,7 @@ public abstract class TaggedService {
 
     Set<Tag> mapTags(TaggedRequest taggedRequest) {
         Set<Tag> tags = new HashSet<>();
-        taggedRequest.getTagNames().forEach((v) -> {
+        taggedRequest.getTags().forEach((v) -> {
             try {
                 Tag tag  = tagRepository.findByName(TagName.valueOf(v)).orElseThrow(() -> new AppException("Tag not found"));
                 tags.add(tag);

@@ -33,14 +33,14 @@ public class TaskService extends TaggedService {
         User user = getUser(currentUser);
         Set<Task> tasks = taskRepository.findByCreatedByAndDateIsOrderByCompleteAsc(user.getId(), date);
         return tasks.stream()
-                .map(ModelMapper::mapTasktoTaskResponse).collect(Collectors.toList());
+                .map(ModelMapper::mapTaskToTaskResponse).collect(Collectors.toList());
     }
 
     public List<TaskResponse> getTaskListInbox(UserPrincipal currentUser, LocalDate date) {
         User user = getUser(currentUser);
-        List<Task> tasks = taskRepository.findByCreatedByAndCompleteIsFalseAndDateBefore(user.getId(), date);
+        List<Task> tasks = taskRepository.findByCreatedByAndCompleteIsFalseAndDateBeforeOrDateIsNullOrderByCreatedAt(user.getId(), date);
         return tasks.stream()
-                .map(ModelMapper::mapTasktoTaskResponse).collect(Collectors.toList());
+                .map(ModelMapper::mapTaskToTaskResponse).collect(Collectors.toList());
     }
 
     public List<TaskResponse> getTaskListUpcoming(UserPrincipal currentUser, LocalDate start, LocalDate end) {
@@ -48,7 +48,15 @@ public class TaskService extends TaggedService {
         List<Task> tasks = taskRepository.findByCreatedByAndDateBetweenOrderByDateAsc(user.getId(), start, end);
         return tasks.stream()
                 .filter(task -> !task.isComplete())
-                .map(ModelMapper::mapTasktoTaskResponse).collect(Collectors.toList());
+                .map(ModelMapper::mapTaskToTaskResponse).collect(Collectors.toList());
+    }
+
+    public List<TaskResponse> getTaskListUpcomingDashboard(UserPrincipal currentUser, LocalDate start, LocalDate end) {
+        User user = getUser(currentUser);
+        List<Task> tasks = taskRepository.findTop6ByCreatedByAndDateBetweenOrderByDateAsc(user.getId(), start, end);
+        return tasks.stream()
+                .filter(task -> !task.isComplete())
+                .map(ModelMapper::mapTaskToTaskResponse).collect(Collectors.toList());
     }
 
     public List<TaskResponse> getTaskListCompleted(UserPrincipal currentUser, LocalDate start, LocalDate end) {
@@ -56,7 +64,7 @@ public class TaskService extends TaggedService {
         List<Task> tasks = taskRepository.findByCreatedByAndDateBetweenOrderByDateAsc(user.getId(), start, end);
         return tasks.stream()
                 .filter(Task::isComplete)
-                .map(ModelMapper::mapTasktoTaskResponse).collect(Collectors.toList());
+                .map(ModelMapper::mapTaskToTaskResponse).collect(Collectors.toList());
     }
 
     public Task createTask(TaskRequest taskRequest, String email) {

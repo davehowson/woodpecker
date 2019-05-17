@@ -37,7 +37,7 @@ public class NoteRequest implements TaggedRequest {
     }
 
     @Override
-    public List<String> getTagNames() {
+    public List<String> getTags() {
         return tagNames;
     }
 
