@@ -59,7 +59,7 @@ module.exports = {
     },
     externals: {
         config: JSON.stringify({
-            apiUrl: 'http://localhost:5000/api'
+            apiUrl: 'https://woodpeckerapp.herokuapp.com/api'
         })
     }
 };
