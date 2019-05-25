@@ -1,12 +1,10 @@
 import { library } from '@fortawesome/fontawesome-svg-core';
 
-import { 
-    faBars, 
+import {
+    faBars,
     faUserCircle,
     faHome,
     faTasks,
-    faStickyNote,
-    faUserCog,
     faCheck,
     faInbox,
     faClock,
@@ -18,7 +16,8 @@ import {
     faMinusCircle,
     faEdit,
     faChevronRight,
-    faChevronLeft
+    faChevronLeft,
+    faBookmark
 } from '@fortawesome/free-solid-svg-icons';
 
 const fontAwesomeLibrary = () => {
@@ -27,8 +26,6 @@ const fontAwesomeLibrary = () => {
         faHome,
         faUserCircle,
         faTasks,
-        faStickyNote,
-        faUserCog,
         faCheck,
         faInbox,
         faClock,
@@ -40,7 +37,8 @@ const fontAwesomeLibrary = () => {
         faMinusCircle,
         faEdit,
         faChevronRight,
-        faChevronLeft
+        faChevronLeft,
+        faBookmark
     );
 }
 

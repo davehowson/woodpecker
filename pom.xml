@@ -113,6 +113,9 @@
                         <goals>
                             <goal>webpack</goal>
                         </goals>
+                        <configuration>
+                            <arguments>--config webpack.prod.js</arguments>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
