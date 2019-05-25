@@ -1,15 +1,13 @@
 package com.davehowson.woodpecker.payload.task;
 
-import com.davehowson.woodpecker.payload.TaggedRequest;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 
-public class TaskRequest implements TaggedRequest {
+public class TaskRequest {
     @Size(max = 100)
     private String date;
 
@@ -21,7 +19,9 @@ public class TaskRequest implements TaggedRequest {
     private String description;
 
     @NotNull
-    private List<String> tags;
+    private String tag;
+
+    private Boolean important;
 
     public LocalDate getDate() {
         if (date == null) {
@@ -54,12 +54,19 @@ public class TaskRequest implements TaggedRequest {
         this.description = description;
     }
 
-    @Override
-    public List<String> getTags() {
-        return tags;
+    public String getTag() {
+        return tag;
     }
 
-    public void setTags(List<String> tags) {
-        this.tags = tags;
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+
+    public Boolean getImportant() {
+        return important;
+    }
+
+    public void setImportant(Boolean important) {
+        this.important = important;
     }
 }

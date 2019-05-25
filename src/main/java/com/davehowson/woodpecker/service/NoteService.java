@@ -12,6 +12,7 @@ import com.davehowson.woodpecker.repository.TagRepository;
 import com.davehowson.woodpecker.repository.UserRepository;
 import com.davehowson.woodpecker.security.UserPrincipal;
 import com.davehowson.woodpecker.util.ModelMapper;
+import org.apache.commons.lang3.EnumUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -41,22 +42,20 @@ public class NoteService extends TaggedService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
 
-        Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdAt");
-        Page<Note> notes = noteRepository.findByCreatedByOrderByCreatedAtDesc(user.getId(), pageable);
+        Pageable pageable = PageRequest.of(page, size, Sort.Direction.ASC, "createdAt");
+        Page<Note> notes = noteRepository.findByCreatedByOrderByImportantDesc(user.getId(), pageable);
 
         return returnPagedResponse(notes);
     }
 
-    public PagedResponse<NoteResponse> getNotesCreatedByAndTagged(UserPrincipal currentUser, String tagName, int page, int size) {
+    public PagedResponse<NoteResponse> getNotesCreatedByAndTagged(UserPrincipal currentUser, String tag, int page, int size) {
         validatePageNumberAndSize(page, size);
         String email = currentUser.getEmail();
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
 
-        Tag tag  = tagRepository.findByName(TagName.valueOf(tagName)).orElseThrow(() -> new AppException("Tag not found"));
-
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdAt");
-        Page<Note> notes = noteRepository.findByCreatedByAndTagsContainingOrderByCreatedAtDesc(user.getId(), tag, pageable);
+        Page<Note> notes = noteRepository.findByCreatedByAndTagOrderByImportantDesc(user.getId(), tag, pageable);
 
         return returnPagedResponse(notes);
     }
@@ -90,10 +89,13 @@ public class NoteService extends TaggedService {
 
         note.setTitle(noteRequest.getTitle());
         note.setDescription(noteRequest.getDescription());
+        if (!(EnumUtils.isValidEnum(TagName.class, noteRequest.getTag()))) {
+            throw new AppException("Invalid Tag");
+        } else {
+            note.setTag(noteRequest.getTag());
+        }
+        note.setImportant(noteRequest.getImportant());
 
-        Set<Tag> tags = mapTags(noteRequest);
-
-        note.setTags(tags);
         note.setUser(user);
 
         return noteRepository.save(note);
@@ -104,8 +106,11 @@ public class NoteService extends TaggedService {
                 .orElseThrow(() -> new ResourceNotFoundException("Note", "id", noteUpdateRequest.getId()));
         note.setTitle(noteUpdateRequest.getTitle());
         note.setDescription(noteUpdateRequest.getDescription());
-        Set<Tag> tags = mapTags(noteUpdateRequest);
-        note.setTags(tags);
+        if (!(EnumUtils.isValidEnum(TagName.class, noteUpdateRequest.getTag()))) {
+            throw new AppException("Invalid Tag");
+        } else {
+            note.setTag(noteUpdateRequest.getTag());
+        }
         noteRepository.save(note);
         return note;
     }

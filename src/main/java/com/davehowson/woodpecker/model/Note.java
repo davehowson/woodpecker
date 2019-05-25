@@ -31,9 +31,9 @@ public class Note extends UserDateAudit {
     @JoinColumn(name = "userId", nullable = false)
     private User user;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "note_tags",
-            joinColumns = @JoinColumn(name = "note_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id"))
-    private Set<Tag> tags = new HashSet<>();
+    @Column
+    private String tag;
+
+    @Column
+    private Boolean important = false;
 }

@@ -9,8 +9,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.HashSet;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -38,11 +36,9 @@ public class Task extends UserDateAudit {
     @JoinColumn(name = "userId", nullable = false)
     private User user;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "task_tags",
-            joinColumns = @JoinColumn(name = "task_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id"))
-    private Set<Tag> tags = new HashSet<>();
+    @Column
+    private String tag;
 
-
+    @Column
+    private boolean important = false;
 }

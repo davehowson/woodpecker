@@ -16,8 +16,9 @@ public class ModelMapper {
         taskResponse.setDate(task.getDate());
         taskResponse.setTime(task.getTime());
         taskResponse.setComplete(task.isComplete());
-        taskResponse.setTags(task.getTags());
+        taskResponse.setTag(task.getTag());
         taskResponse.setCreationDateTime(task.getCreatedAt());
+        taskResponse.setImportant(task.isImportant());
 
         User user = task.getUser();
         UserSummary summary = new UserSummary(user.getId(), user.getEmail());
@@ -40,7 +41,8 @@ public class ModelMapper {
         noteResponse.setId(note.getId());
         noteResponse.setTitle(note.getTitle());
         noteResponse.setDescription(note.getDescription());
-        noteResponse.setTags(note.getTags());
+        noteResponse.setTag(note.getTag());
+        noteResponse.setImportant(note.getImportant());
         noteResponse.setCreationDateTime(note.getCreatedAt());
 
         User user = note.getUser();

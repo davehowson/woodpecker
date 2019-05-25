@@ -1,13 +1,11 @@
 package com.davehowson.woodpecker.payload.note;
 
-import com.davehowson.woodpecker.payload.TaggedRequest;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.List;
 
-public class NoteRequest implements TaggedRequest {
+public class NoteRequest {
 
     @NotBlank
     @Size(max = 100)
@@ -18,7 +16,9 @@ public class NoteRequest implements TaggedRequest {
     private String description;
 
     @NotNull
-    private List<String> tagNames;
+    private String tag;
+
+    private Boolean important;
 
     public String getTitle() {
         return title;
@@ -36,12 +36,19 @@ public class NoteRequest implements TaggedRequest {
         this.description = description;
     }
 
-    @Override
-    public List<String> getTags() {
-        return tagNames;
+    public String getTag() {
+        return tag;
     }
 
-    public void setTagNames(List<String> tagNames) {
-        this.tagNames = tagNames;
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+
+    public Boolean getImportant() {
+        return important;
+    }
+
+    public void setImportant(Boolean important) {
+        this.important = important;
     }
 }

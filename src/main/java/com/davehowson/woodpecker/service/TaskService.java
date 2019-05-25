@@ -1,7 +1,9 @@
 package com.davehowson.woodpecker.service;
 
+import com.davehowson.woodpecker.exception.AppException;
 import com.davehowson.woodpecker.exception.ResourceNotFoundException;
 import com.davehowson.woodpecker.model.Tag;
+import com.davehowson.woodpecker.model.TagName;
 import com.davehowson.woodpecker.model.Task;
 import com.davehowson.woodpecker.model.User;
 import com.davehowson.woodpecker.payload.*;
@@ -11,6 +13,7 @@ import com.davehowson.woodpecker.repository.TaskRepository;
 import com.davehowson.woodpecker.repository.UserRepository;
 import com.davehowson.woodpecker.security.UserPrincipal;
 import com.davehowson.woodpecker.util.ModelMapper;
+import org.apache.commons.lang3.EnumUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,21 +34,22 @@ public class TaskService extends TaggedService {
 
     public List<TaskResponse> getTaskListOnDate(UserPrincipal currentUser, LocalDate date) {
         User user = getUser(currentUser);
-        Set<Task> tasks = taskRepository.findByCreatedByAndDateIsOrderByCompleteAsc(user.getId(), date);
+        Set<Task> tasks = taskRepository.findByCreatedByAndDateIsOrderByImportantDescCompleteAsc(user.getId(), date);
         return tasks.stream()
                 .map(ModelMapper::mapTaskToTaskResponse).collect(Collectors.toList());
     }
 
-    public List<TaskResponse> getTaskListInbox(UserPrincipal currentUser, LocalDate date) {
+    public List<TaskResponse> getTaskListOverdue(UserPrincipal currentUser, LocalDate date) {
         User user = getUser(currentUser);
-        List<Task> tasks = taskRepository.findByCreatedByAndCompleteIsFalseAndDateBeforeOrDateIsNullOrderByCreatedAt(user.getId(), date);
+        List<Task> tasks = taskRepository.findByCreatedByAndDateBeforeOrDateIsNullOrderByImportantDescDateDesc(user.getId(), date);
         return tasks.stream()
+                .filter(task -> !task.isComplete())
                 .map(ModelMapper::mapTaskToTaskResponse).collect(Collectors.toList());
     }
 
     public List<TaskResponse> getTaskListUpcoming(UserPrincipal currentUser, LocalDate start, LocalDate end) {
         User user = getUser(currentUser);
-        List<Task> tasks = taskRepository.findByCreatedByAndDateBetweenOrderByDateAsc(user.getId(), start, end);
+        List<Task> tasks = taskRepository.findByCreatedByAndDateBetweenOrderByImportantDescDateAsc(user.getId(), start, end);
         return tasks.stream()
                 .filter(task -> !task.isComplete())
                 .map(ModelMapper::mapTaskToTaskResponse).collect(Collectors.toList());
@@ -53,7 +57,7 @@ public class TaskService extends TaggedService {
 
     public List<TaskResponse> getTaskListUpcomingDashboard(UserPrincipal currentUser, LocalDate start, LocalDate end) {
         User user = getUser(currentUser);
-        List<Task> tasks = taskRepository.findTop6ByCreatedByAndDateBetweenOrderByDateAsc(user.getId(), start, end);
+        List<Task> tasks = taskRepository.findTop6ByCreatedByAndDateBetweenOrderByImportantDescDateAsc(user.getId(), start, end);
         return tasks.stream()
                 .filter(task -> !task.isComplete())
                 .map(ModelMapper::mapTaskToTaskResponse).collect(Collectors.toList());
@@ -61,7 +65,7 @@ public class TaskService extends TaggedService {
 
     public List<TaskResponse> getTaskListCompleted(UserPrincipal currentUser, LocalDate start, LocalDate end) {
         User user = getUser(currentUser);
-        List<Task> tasks = taskRepository.findByCreatedByAndDateBetweenOrderByDateAsc(user.getId(), start, end);
+        List<Task> tasks = taskRepository.findByCreatedByAndDateBetweenOrderByImportantDescDateAsc(user.getId(), start, end);
         return tasks.stream()
                 .filter(Task::isComplete)
                 .map(ModelMapper::mapTaskToTaskResponse).collect(Collectors.toList());
@@ -75,9 +79,14 @@ public class TaskService extends TaggedService {
         task.setDescription(taskRequest.getDescription());
         task.setDate(taskRequest.getDate());
         task.setTime(taskRequest.getTime());
-        Set<Tag> tags = mapTags(taskRequest);
+        task.setImportant(taskRequest.getImportant());
 
-        task.setTags(tags);
+        if (!(EnumUtils.isValidEnum(TagName.class, taskRequest.getTag()))) {
+            throw new AppException("Invalid Tag");
+        } else {
+            task.setTag(taskRequest.getTag());
+        }
+
         task.setUser(user);
 
         return taskRepository.save(task);
@@ -104,8 +113,8 @@ public class TaskService extends TaggedService {
         task.setDescription(taskUpdateRequest.getDescription());
         task.setDate(taskUpdateRequest.getDate());
         task.setComplete(taskUpdateRequest.getComplete());
-        Set<Tag> tags = mapTags(taskUpdateRequest);
-        task.setTags(tags);
+        task.setTag(taskUpdateRequest.getTag());
+        task.setImportant(taskUpdateRequest.getImportant());
         taskRepository.save(task);
         return task;
     }

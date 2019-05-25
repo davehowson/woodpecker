@@ -41,11 +41,11 @@ public class TaskController {
         return taskService.getTaskListOnDate(currentUser, localDate);
     }
 
-    @GetMapping("/inbox")
+    @GetMapping("/overdue")
     @PreAuthorize("hasRole('USER')")
     public List<TaskResponse> getTasksInbox(@CurrentUser UserPrincipal currentUser) {
         LocalDate date = LocalDate.now();
-        return taskService.getTaskListInbox(currentUser, date);
+        return taskService.getTaskListOverdue(currentUser, date);
     }
 
     @GetMapping("/upcoming")

@@ -14,7 +14,8 @@ public class NoteResponse {
     private Long id;
     private String title;
     private String description;
-    private Set<Tag> tags;
+    private String tag;
+    private Boolean important;
     private UserSummary createdBy;
     private Instant creationDateTime;
 }
