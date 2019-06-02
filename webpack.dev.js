@@ -7,11 +7,12 @@ module.exports = merge(common, {
     output: {
         path: __dirname,
         filename: './dev-server/bundle.js',
-        publicPath: '/dev-server/'
+        publicPath: '/'
     },
     mode: "development",
     devtool: '',
     devServer: {
+        contentBase: './dev-server',
         hot: true,
         historyApiFallback: true
     },
