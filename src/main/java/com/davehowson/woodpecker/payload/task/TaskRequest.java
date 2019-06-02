@@ -1,6 +1,8 @@
 package com.davehowson.woodpecker.payload.task;
 
 
+import org.springframework.lang.Nullable;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -18,7 +20,7 @@ public class TaskRequest {
     @Size(max = 200)
     private String description;
 
-    @NotNull
+    @Nullable
     private String tag;
 
     private Boolean important;

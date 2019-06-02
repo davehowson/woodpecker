@@ -1,8 +1,9 @@
 package com.davehowson.woodpecker.payload.note;
 
 
+import org.springframework.lang.Nullable;
+
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class NoteRequest {
@@ -15,7 +16,7 @@ public class NoteRequest {
     @Size(max = 2000)
     private String description;
 
-    @NotNull
+    @Nullable
     private String tag;
 
     private Boolean important;

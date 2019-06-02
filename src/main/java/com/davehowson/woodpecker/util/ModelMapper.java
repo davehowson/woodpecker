@@ -1,6 +1,8 @@
 package com.davehowson.woodpecker.util;
 
 import com.davehowson.woodpecker.model.*;
+import com.davehowson.woodpecker.payload.bookmark.BookmarkResponse;
+import com.davehowson.woodpecker.payload.bookmark.CategoryResponse;
 import com.davehowson.woodpecker.payload.note.NoteResponse;
 import com.davehowson.woodpecker.payload.task.TaskResponse;
 import com.davehowson.woodpecker.payload.user.UserSummary;
@@ -51,5 +53,33 @@ public class ModelMapper {
 
         return noteResponse;
     }
+
+    public static CategoryResponse mapCategoryToCategoryResponse(Category category) {
+        CategoryResponse categoryResponse = new CategoryResponse();
+        categoryResponse.setId(category.getId());
+        categoryResponse.setName(category.getName());
+
+        User user = category.getUser();
+        UserSummary summary = new UserSummary(user.getId(), user.getEmail());
+        categoryResponse.setCreatedBy(summary);
+
+        return categoryResponse;
+    }
+
+    public static BookmarkResponse mapBookmarkToBookmarkResponse(Bookmark bookmark) {
+        BookmarkResponse bookmarkResponse = new BookmarkResponse();
+        bookmarkResponse.setId(bookmark.getId());
+        bookmarkResponse.setName(bookmark.getName());
+        bookmarkResponse.setUrl(bookmark.getUrl());
+
+        bookmarkResponse.setCategory(bookmark.getCategory().getId());
+
+        User user = bookmark.getUser();
+        UserSummary summary = new UserSummary(user.getId(), user.getEmail());
+        bookmarkResponse.setCreatedBy(summary);
+
+        return bookmarkResponse;
+    }
+
 
 }

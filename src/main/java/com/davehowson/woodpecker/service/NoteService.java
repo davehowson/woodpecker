@@ -8,7 +8,6 @@ import com.davehowson.woodpecker.payload.note.NoteRequest;
 import com.davehowson.woodpecker.payload.note.NoteResponse;
 import com.davehowson.woodpecker.payload.note.NoteUpdateRequest;
 import com.davehowson.woodpecker.repository.NoteRepository;
-import com.davehowson.woodpecker.repository.TagRepository;
 import com.davehowson.woodpecker.repository.UserRepository;
 import com.davehowson.woodpecker.security.UserPrincipal;
 import com.davehowson.woodpecker.util.ModelMapper;
@@ -18,21 +17,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 @Service
-public class NoteService extends TaggedService {
+public class NoteService extends ServiceInterface {
 
     private final NoteRepository noteRepository;
 
     @Autowired
-    public NoteService(TagRepository tagRepository, UserRepository userRepository, NoteRepository noteRepository) {
-        super(tagRepository, userRepository);
+    public NoteService(UserRepository userRepository, NoteRepository noteRepository) {
+        super(userRepository);
         this.noteRepository = noteRepository;
     }
 
@@ -89,11 +86,15 @@ public class NoteService extends TaggedService {
 
         note.setTitle(noteRequest.getTitle());
         note.setDescription(noteRequest.getDescription());
-        if (!(EnumUtils.isValidEnum(TagName.class, noteRequest.getTag()))) {
+
+        if (noteRequest.getTag() == null || noteRequest.getTag().isEmpty()) {
+            note.setTag(null);
+        } else if (!(EnumUtils.isValidEnum(TagName.class, noteRequest.getTag()))) {
             throw new AppException("Invalid Tag");
         } else {
             note.setTag(noteRequest.getTag());
         }
+
         note.setImportant(noteRequest.getImportant());
 
         note.setUser(user);

@@ -1,17 +1,14 @@
 package com.davehowson.woodpecker.service;
 
 import com.davehowson.woodpecker.exception.BadRequestException;
-import com.davehowson.woodpecker.repository.TagRepository;
 import com.davehowson.woodpecker.repository.UserRepository;
 import com.davehowson.woodpecker.util.AppConstants;
 
-public abstract class TaggedService {
+public abstract class ServiceInterface {
 
-    TagRepository tagRepository;
     UserRepository userRepository;
 
-    public TaggedService(TagRepository tagRepository, UserRepository userRepository) {
-        this.tagRepository = tagRepository;
+    public ServiceInterface(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 

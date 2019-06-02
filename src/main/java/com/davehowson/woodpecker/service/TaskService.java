@@ -2,13 +2,11 @@ package com.davehowson.woodpecker.service;
 
 import com.davehowson.woodpecker.exception.AppException;
 import com.davehowson.woodpecker.exception.ResourceNotFoundException;
-import com.davehowson.woodpecker.model.Tag;
 import com.davehowson.woodpecker.model.TagName;
 import com.davehowson.woodpecker.model.Task;
 import com.davehowson.woodpecker.model.User;
 import com.davehowson.woodpecker.payload.*;
 import com.davehowson.woodpecker.payload.task.*;
-import com.davehowson.woodpecker.repository.TagRepository;
 import com.davehowson.woodpecker.repository.TaskRepository;
 import com.davehowson.woodpecker.repository.UserRepository;
 import com.davehowson.woodpecker.security.UserPrincipal;
@@ -22,13 +20,13 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class TaskService extends TaggedService {
+public class TaskService extends ServiceInterface {
 
     private final TaskRepository taskRepository;
 
     @Autowired
-    public TaskService(TagRepository tagRepository, UserRepository userRepository, TaskRepository taskRepository) {
-        super(tagRepository, userRepository);
+    public TaskService(UserRepository userRepository, TaskRepository taskRepository) {
+        super(userRepository);
         this.taskRepository = taskRepository;
     }
 
@@ -81,7 +79,9 @@ public class TaskService extends TaggedService {
         task.setTime(taskRequest.getTime());
         task.setImportant(taskRequest.getImportant());
 
-        if (!(EnumUtils.isValidEnum(TagName.class, taskRequest.getTag()))) {
+        if (taskRequest.getTag() == null || taskRequest.getTag().isEmpty()) {
+            task.setTag(null);
+        } else if (!(EnumUtils.isValidEnum(TagName.class, taskRequest.getTag()))) {
             throw new AppException("Invalid Tag");
         } else {
             task.setTag(taskRequest.getTag());
