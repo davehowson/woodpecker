@@ -1,6 +1,5 @@
 import { BehaviorSubject } from 'rxjs';
 
-import config from 'config';
 import { handleResponse } from '@/Utilities';
 
 const currentUserSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('currentUser')));
@@ -20,7 +19,7 @@ function login(email, password) {
         body: JSON.stringify({ email, password })
     };
 
-    return fetch(`${config.apiUrl}/auth/login`, requestOptions)
+    return fetch(`${process.env.API_URL}/auth/login`, requestOptions)
         .then(handleResponse)
         .then(user => {
             localStorage.setItem('currentUser', JSON.stringify(user));
@@ -40,7 +39,7 @@ function register(name, email, password) {
         body: JSON.stringify({ name, email, password })
     };
 
-    return fetch(`${config.apiUrl}/auth/register`, requestOptions)
+    return fetch(`${process.env.API_URL}/auth/register`, requestOptions)
         .then(handleResponse)
         .then(user => {
             localStorage.setItem('currentUser', JSON.stringify(user));

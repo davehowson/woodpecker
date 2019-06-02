@@ -1,4 +1,3 @@
-import config from 'config';
 import { authHeader } from '@/Utilities';
 import { handleResponse, handleNotification } from '@/Utilities';
 
@@ -12,9 +11,9 @@ export const noteService = {
 
 function getNotesByTag(pageNumber, tag) {
     const requestOptions = { method: 'GET', headers: authHeader() };
-    let url = `${config.apiUrl}/notes?page=${pageNumber}&size=8`;;
+    let url = `${process.env.API_URL}/notes?page=${pageNumber}&size=8`;;
     if (tag != 'all') {
-        url = `${config.apiUrl}/notes/tag?tag=${tag.toUpperCase()}&page=${pageNumber}&size=8`;
+        url = `${process.env.API_URL}/notes/tag?tag=${tag.toUpperCase()}&page=${pageNumber}&size=8`;
     }
 
     return fetch(url, requestOptions)
@@ -26,7 +25,7 @@ function getNotesByTag(pageNumber, tag) {
 
 function getNote(noteId) {
     const requestOptions = { method: 'GET', headers: authHeader() };
-    return fetch(`${config.apiUrl}/notes/note?noteId=${noteId}`, requestOptions)
+    return fetch(`${process.env.API_URL}/notes/note?noteId=${noteId}`, requestOptions)
         .then(handleResponse)
         .catch(function(error){
             handleNotification("error", "Unable to Fetch Notes")
@@ -35,7 +34,7 @@ function getNote(noteId) {
 
 function deleteNote(noteId) {
     const requestOptions = { method: 'DELETE', headers: authHeader() };
-    return fetch(`${config.apiUrl}/notes/${noteId}`, requestOptions)
+    return fetch(`${process.env.API_URL}/notes/${noteId}`, requestOptions)
         .then(handleResponse)
         .catch(function(error){
             handleNotification("error", "Unable to Fetch Notes")
@@ -50,7 +49,7 @@ function create(title, description, tag, important) {
         body: JSON.stringify({ title, description, tag, important })
     };
 
-    return fetch(`${config.apiUrl}/notes`, requestOptions)
+    return fetch(`${process.env.API_URL}/notes`, requestOptions)
         .then(handleResponse)
         .then(function(response){
             if (response.success)
@@ -69,7 +68,7 @@ function update(id, title, description, tag, important) {
         body: JSON.stringify({ id, title, description, tag, important })
     };
 
-    return fetch(`${config.apiUrl}/notes`, requestOptions)
+    return fetch(`${process.env.API_URL}/notes`, requestOptions)
         .then(handleResponse)
         .then(function(response){
            if (response.success)

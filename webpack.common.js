@@ -1,5 +1,5 @@
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-var path = require('path')
+const webpack = require('webpack');
+const path = require('path')
 
 module.exports = {
     entry: './src/main/js/src/index.jsx',
@@ -46,9 +46,9 @@ module.exports = {
             '@': path.resolve(__dirname, './src/main/js/src/'),
         }
     },
-    externals: {
-        config: JSON.stringify({
-            apiUrl: 'http://localhost:5000/api'
+    plugins: [
+        new webpack.EnvironmentPlugin({
+            API_URL: 'http://localhost:5000/api'
         })
-    }
+    ]
 };
