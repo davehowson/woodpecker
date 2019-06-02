@@ -39,6 +39,4 @@ public class Task extends UserDateAudit {
     @Column
     private String tag;
 
-    @Column
-    private boolean important = false;
 }

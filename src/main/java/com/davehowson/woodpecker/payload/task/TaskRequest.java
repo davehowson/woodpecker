@@ -23,8 +23,6 @@ public class TaskRequest {
     @Nullable
     private String tag;
 
-    private Boolean important;
-
     public LocalDate getDate() {
         if (date == null) {
             return null;
@@ -62,13 +60,5 @@ public class TaskRequest {
 
     public void setTag(String tag) {
         this.tag = tag;
-    }
-
-    public Boolean getImportant() {
-        return important;
-    }
-
-    public void setImportant(Boolean important) {
-        this.important = important;
     }
 }

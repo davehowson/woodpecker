@@ -18,6 +18,5 @@ public class TaskResponse {
     private String tag;
     private UserSummary createdBy;
     private Instant creationDateTime;
-    private Boolean important;
     private Boolean complete;
 }

@@ -20,7 +20,6 @@ public class ModelMapper {
         taskResponse.setComplete(task.isComplete());
         taskResponse.setTag(task.getTag());
         taskResponse.setCreationDateTime(task.getCreatedAt());
-        taskResponse.setImportant(task.isImportant());
 
         User user = task.getUser();
         UserSummary summary = new UserSummary(user.getId(), user.getEmail());
