@@ -30,7 +30,12 @@ module.exports = {
             {
                 test: /\.(png|svg|jpg|gif)$/,
                 use: [
-                    'file-loader'
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            name:  'img/[name].[ext]'
+                        }
+                    }
                 ]
             }
         ]
@@ -43,7 +48,7 @@ module.exports = {
     },
     externals: {
         config: JSON.stringify({
-            apiUrl: 'https://woodpeckerapp.herokuapp.com/api'
+            apiUrl: 'http://localhost:5000/api'
         })
     }
 };

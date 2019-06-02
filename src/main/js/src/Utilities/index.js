@@ -1,4 +1,3 @@
-export * from './routes';
 export * from './handle-response';
 export * from './history';
 export * from './private-route';

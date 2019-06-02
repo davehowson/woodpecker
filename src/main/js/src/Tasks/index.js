@@ -1,5 +1,5 @@
 export * from './Tasks';
+export * from './AllTasks';
 export * from './TaskList';
-export * from './TaskCalendar';
-export * from './Task';
+export * from './TaskRow';
 export * from './AddTask';

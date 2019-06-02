@@ -1,43 +1,58 @@
 import React, { useState } from 'react';
-import { Route, Redirect } from 'react-router-dom';
-
+import { Switch, Route, Redirect } from 'react-router-dom';
+import Helmet from 'react-helmet';
+import { makeStyles } from '@material-ui/styles';
 import { Tasks } from '@/Tasks';
-import { Dashboard } from '@/Dashboard';
 import { Notes } from '@/Notes';
-import { Sidebar, Header } from '@/Layouts'
+import { Bookmarks } from '@/Bookmarks';
+import { Header, Sidebar } from '@/Layouts'
 import { fontAwesomeLibrary } from '@/Utilities';
 
+const useStyles = makeStyles(theme => ({
+    root: {
+        display: 'flex'
+    },
+    appBarSpacer: theme.mixins.toolbar,
+    content: {
+        flexGrow: 1,
+        padding: theme.spacing(2),
+    }
+}))
 
-const App = (props) => {
-    const [sidebarClass, setSidebarClass] = useState('');
-    const [contentClass, setContentClass] = useState('');
-    const [pageName, setPageName] = useState('');
-    
+const App= (props) => {
+    const [drawerOpen, setDrawerOpen] = useState(false);
     fontAwesomeLibrary();
 
-    const handleToggle = () => {
-        if (sidebarClass == "toggled") {
-            setSidebarClass('');
-            setContentClass('');
-        } else {
-            setSidebarClass("toggled");
-            setContentClass("toggled");
-        }
+    const handleDrawerToggle = () => {
+        setDrawerOpen(!drawerOpen)
     }
+    const classes = useStyles();
 
     return (
-        <div className={"d-flex h-100 " + sidebarClass} id="wrapper">
-            <Sidebar/>
-            
-
-            <div id="page-content-wrapper" className={contentClass}>
-                <Header handleToggle={handleToggle} pageName={pageName} />
-                <Route exact path={'/app'} render={() => (<Redirect to="/app/dashboard" />)} />
-                <Route path={'/app/dashboard'} component={Dashboard} />
-                <Route path={'/app/tasks'} component={Tasks} />
-                <Route path={'/app/notes'} component={Notes} />
-            </div>
-        </div>
+            <Route
+                render={({location}) =>(
+                    <div className={classes.root}>
+                        <Helmet>
+                                {/*<style type="text/css">{`
+                                    html {
+                                        overflow-y: scroll;
+                                    }
+                                `}</style>*/}
+                        </Helmet>
+                        <Header drawerOpen={drawerOpen} handleDrawerToggle={handleDrawerToggle}/>
+                        <Sidebar drawerOpen={drawerOpen} handleDrawerToggle={handleDrawerToggle}/>
+                        <main className={classes.content}>
+                            <div className={classes.appBarSpacer} />
+                            <Switch>
+                                <Route exact path={'/app'} render={() => (<Redirect to="/app/tasks" />)} />
+                                <Route path={'/app/tasks'} component={Tasks} />
+                                <Route path={'/app/notes'} component={Notes} />
+                                <Route path={'/app/bookmarks'} component={Bookmarks} />
+                            </Switch>
+                        </main>
+                    </div>
+                )}
+            />
     );
 }
 

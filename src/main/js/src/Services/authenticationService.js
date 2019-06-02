@@ -57,4 +57,3 @@ function logout() {
     localStorage.removeItem('currentUser');
     currentUserSubject.next(null);
 }
-

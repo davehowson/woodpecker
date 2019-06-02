@@ -1,9 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 
-import '@/index.css'
-
-import { Routes } from '@/Utilities';
+import { Routes } from '@/App';
 
 render(
     <Routes />,

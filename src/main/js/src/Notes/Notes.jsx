@@ -1,114 +1,153 @@
-import React, { useState, useEffect } from 'react';
-import Helmet from 'react-helmet';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import CardColumns from 'react-bootstrap/CardColumns';
-import Card from 'react-bootstrap/Card';
-import Button from "react-bootstrap/Button";
-import Badge from "react-bootstrap/Badge";
+import React, { useState } from 'react';
+import { Helmet } from 'react-helmet';
+import { makeStyles } from '@material-ui/styles';
+import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Grid';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import Typography from '@material-ui/core/Typography';
 
-import { noteService } from '@/Services';
+import { NotesList, EditNote } from '@/Notes';
 
-import '@/Notes/Notes.css';
-import { Note, AddNote, Paginator } from '@/Notes';
+const useStyles = makeStyles(theme => ({
+    card: {
+        minHeight: '80vh'
+    },
+    categories: {
+        display: "flex",
+        flexDirection: "row"
+    },
+    category: {
+        fontSize: theme.typography.pxToRem(12),
+        textAlign: "center",
+        cursor: "pointer",
+        "& span": {
+            color: '#a2a2a2',
+            transition: 'color 500ms',
+        },
+        "&:focus": {
+            backgroundColor: 'transparent !important',
+            "& span": {
+                color: theme.palette.secondary.dark
+            }
+        },
+        "&:hover": {
+            backgroundColor: 'transparent !important',
+            "& span": {
+                color: theme.palette.secondary.dark
+            }
+        }
+    },
+    selected: {
+        backgroundColor: 'transparent !important',
+        "& span": {
+            color: '#004747 !important',
+            fontWeight: 500
+        },
+    },
+    listRow: {
+        textAlign: "center",
+        [theme.breakpoints.up('md')]: {
+            maxHeight: '74vh',
+            minHeight: '70vh',
+            overflow: 'auto'
+        }
+    },
+    title: {
+        marginBottom: theme.spacing(1),
+        textAlign: 'center'
+    },
+    fab: {
+        position: 'fixed',
+        bottom: 20,
+        right: 20,
+        top: 'auto',
+        left: 'auto',
+    },
+    addIcon: {
+        marginRight: theme.spacing(1),
+        fontSize: 20,
+    },
+}))
 
 const Notes = () => {
-    const [notes, setNotes] = useState(null);
-    const [noteModalStatus, setNoteModalStatus] = useState(false);
+    const [notesCategory, setNotesCategory] = useState("all");
     const [noteId, setNoteId] = useState(null);
-    const [addModalStatus, setAddModalStatus] = useState(false);
-    const [activePage, setActivePage] = useState(0);
-    const [pageCount, setPageCount] = useState(0);
-    const [currentTag, setCurrentTag] = useState(null);
+    const [taskHeader, setTaskHeader] = useState("Add Task");
+    const [reRender, setReRender] = useState(false);
 
-    useEffect(() => {
-        noteService.getNotesByTag(activePage, currentTag).then(notes => {
-            setNotes(notes.content);
-            setPageCount(notes.totalPages);
-        })
-    }, [activePage, currentTag, noteModalStatus, addModalStatus]);
+    const classes = useStyles();
+    const noteCategories = ["All", "Work", "Personal", "Other"];
 
-    const handleCardClick = (id) => {
-        setNoteId(id)
-        setNoteModalStatus(true);
-    }
-
-    const handleAddClick = () => {
-        setAddModalStatus(true);
-    }
-
-    const handleTag = (tags) => {
-        let result = [];
-        for (const key of Object.keys(tags)) {
-            let tag = tags[key].name.toLowerCase();
-            result.push(
-                <Badge  key={key} variant="secondary" className="mr-1" id={"badge-" + tag}>
-                    {tag.charAt(0).toUpperCase() + tag.slice(1)}
-                </Badge>
-            );
-        }
-        result.sort()
-        return result;
-    };
-
-    const handleTagClick = (tag) => {
-        setCurrentTag(tag);
-    }
-
-    const handleActive = (tag) => {
-        if (tag === currentTag)
-            return "active-tag";
+    const handleCategory = (category) => {
+        setNotesCategory(category);
     }
 
     return (
-        <div className="container-fluid mt-3">
+        <React.Fragment>
             <Helmet>
                 <title>Woodpecker - Notes</title>
             </Helmet>
-            <h4 className="page-header">Notes</h4>
-            <Row>
-                <Col>
-                    <ul className="notes-nav">
-                        <li className={handleActive(null)} onClick={() => handleTagClick(null)}>All</li>
-                        <li className={handleActive("IMPORTANT")} onClick={() => handleTagClick("IMPORTANT")}>Important</li>
-                        <li className={handleActive("WORK")} onClick={() => handleTagClick("WORK")}>Work</li>
-                        <li className={handleActive("PERSONAL")} onClick={() => handleTagClick("PERSONAL")}>Personal</li>
-                        <li className={handleActive("OTHER")} onClick={() => handleTagClick("OTHER")}>Other</li>
-                    </ul>
-                </Col>
-                <Col>
-                    <Button variant="outline-primary" className="float-right mr-4" onClick={handleAddClick}>Add Note</Button>
-                </Col>
-            </Row> 
-            <Row className="mx-3 mt-3">
-                <Col>
-                    {notes &&
-                        <CardColumns>
-                            {notes.map(note => 
-                                <Card onClick={() => handleCardClick(note.id)} key={note.id} className="notes-card h-100">
-                                    <Card.Body>
-                                        <Card.Title>{note.title}</Card.Title>
-                                        <Card.Text>
-                                            <span className="d-block mb-2">{note.description}</span>
-                                            {handleTag(note.tags)}
-                                        </Card.Text>
-                                    </Card.Body>
-                                </Card>
-                            )}
-                        
-                        </CardColumns>
-                    }
-                </Col>
-            </Row>
-            <Row>
-                <Col>
-                    <Paginator activePage={activePage} setActivePage={setActivePage} pageCount={pageCount} />
-                </Col>
-            </Row>
-            <Note noteModalStatus={noteModalStatus} setNoteModalStatus={setNoteModalStatus} noteId={noteId} setNoteId={setNoteId} />
-            <AddNote addModalStatus={addModalStatus} setAddModalStatus={setAddModalStatus} />
-        </div>
-    )
+            <Container>
+                <Card className={classes.card}>
+                    <CardContent>
+                        <Grid container spacing={4}>
+                            <Grid item md={3} sm={12}>
+                                <Grid container>
+                                    <Grid item xs={12}>
+                                        <List className={classes.categories} component="nav" dense disablePadding>
+                                            {noteCategories.map(item =>
+                                                <ListItem
+                                                    className={classes.category}
+                                                    selected={notesCategory === item.toLowerCase()}
+                                                    onClick={() => handleCategory(item.toLowerCase())}
+                                                    key={item}
+                                                    classes={{
+                                                        selected: classes.selected
+                                                    }}
+                                                >
+                                                    <ListItemText classes={{primary: classes.categoryText}} primary={item}/>
+                                                </ListItem>
+                                            )}
+                                        </List>
+                                    </Grid>
+                                    <Grid item xs={12} className={classes.listRow}>
+                                        <NotesList
+                                            notesCategory={notesCategory}
+                                            noteId={noteId}
+                                            setNoteId={setNoteId}
+                                            reRender={reRender}
+                                            setReRender={setReRender}
+                                        />
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                            <Grid item md={9} sm={12}>
+                                <Grid container>
+                                    <Grid item xs={12} className={classes.title}>
+                                        <Typography componenet="h2" variant="h5">{taskHeader}</Typography>
+                                    </Grid>
+                                    <Grid item>
+                                        <EditNote
+                                            noteId={noteId}
+                                            setNoteId={setNoteId}
+                                            setTaskHeader={setTaskHeader}
+                                            setNotesCategory={setNotesCategory}
+                                            reRender={reRender}
+                                            setReRender={setReRender}
+                                        />
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </CardContent>
+                </Card>
+            </Container>
+        </React.Fragment>
+    );
 }
 
 export { Notes };

@@ -12,9 +12,9 @@ export const noteService = {
 
 function getNotesByTag(pageNumber, tag) {
     const requestOptions = { method: 'GET', headers: authHeader() };
-    let url = `${config.apiUrl}/notes?page=${pageNumber}`;;
-    if (tag != null) {
-        url = `${config.apiUrl}/notes/tag?tag=${tag}&page=${pageNumber}`;
+    let url = `${config.apiUrl}/notes?page=${pageNumber}&size=8`;;
+    if (tag != 'all') {
+        url = `${config.apiUrl}/notes/tag?tag=${tag.toUpperCase()}&page=${pageNumber}&size=8`;
     }
 
     return fetch(url, requestOptions)
@@ -37,20 +37,17 @@ function deleteNote(noteId) {
     const requestOptions = { method: 'DELETE', headers: authHeader() };
     return fetch(`${config.apiUrl}/notes/${noteId}`, requestOptions)
         .then(handleResponse)
-        .then(() => {
-            handleNotification("success", "Note Deleted Successfully")
-        })
         .catch(function(error){
-            handleNotification("error", "Unable to Delete Note")
+            handleNotification("error", "Unable to Fetch Notes")
         });
 }
 
 
-function create(title, description, tagNames) {
+function create(title, description, tag, important) {
     const requestOptions = {
         method: 'POST',
         headers: authHeader(),
-        body: JSON.stringify({ title, description, tagNames })
+        body: JSON.stringify({ title, description, tag, important })
     };
 
     return fetch(`${config.apiUrl}/notes`, requestOptions)
@@ -58,28 +55,28 @@ function create(title, description, tagNames) {
         .then(function(response){
             if (response.success)
                 handleNotification("success", "Note Created Successfully")
-                return response.message  
+                return response.message
         })
         .catch(function(error) {
             handleNotification("error", "Unable to Create Note")
         })
 }
 
-function update(id, title, description, tagNames) {
+function update(id, title, description, tag, important) {
     const requestOptions = {
         method: 'PATCH',
         headers: authHeader(),
-        body: JSON.stringify({ id, title, description, tagNames })
+        body: JSON.stringify({ id, title, description, tag, important })
     };
 
     return fetch(`${config.apiUrl}/notes`, requestOptions)
         .then(handleResponse)
         .then(function(response){
-            if (response.success)
-                handleNotification("success", "Note Updated Successfully")
-                return response.message
-        })
-        .catch(function(error) {
-            handleNotification("error", "Unable to Update Note")
-        })
+           if (response.success)
+               handleNotification("success", "Note Updated Successfully")
+               return response.message
+       })
+       .catch(function(error) {
+           handleNotification("error", "Unable to Update Note")
+       })
 }

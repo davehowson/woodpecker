@@ -1,10 +1,12 @@
 const merge = require('webpack-merge');
 const common = require('./webpack.common.js');
+const path = require('path');
 
 module.exports = merge(common, {
     output: {
-        path: __dirname,
-        filename: './src/main/resources/static/built/bundle.js'
+        path: path.join(__dirname, 'src', 'main', 'resources', 'static'),
+        filename: './built/bundle.js',
+        publicPath: '/'
     },
     mode: 'production'
 })

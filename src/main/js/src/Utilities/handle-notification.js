@@ -1,28 +1,42 @@
 import React from 'react';
 import toast from 'toasted-notes';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import { styled } from '@material-ui/styles';
+import Icon from '@material-ui/core/Icon';
+
+const ToastIcon = styled(Icon)({
+    display: "inline-block",
+    verticalAlign: "middle"
+})
+
+const ToastText = styled(Typography)({
+    display: "inline-block",
+    verticalAlign: "middle"
+})
 
 export function handleNotification(status, message) {
-    let notifClass = "";
     let notifIcon = "";
     if (status == "success") {
-        notifClass = "text-success font-weight-bold";
-        notifIcon = (<FontAwesomeIcon icon="check-circle" />);
+        notifIcon = (<ToastIcon color="primary">check_circle</ToastIcon>);
     } else if (status == "warning") {
-        notifClass = "text-warning font-weight-bold";
-        notifIcon = (<FontAwesomeIcon icon="minus-circle" />);
+        notifIcon = (<ToastIcon color="secondary">warning</ToastIcon>);
     } else {
-        notifClass = "text-primary font-weight-bold";
-        notifIcon = (<FontAwesomeIcon icon="exclamation-circle" />);
+        notifIcon = (<ToastIcon color="error">error</ToastIcon>);
     }
+    const notification = (
+        <Grid container>
+            <Grid item>
+                {notifIcon} <ToastText variant="body2" >{message}</ToastText>
+            </Grid>
+        </Grid>
+    )
 
     toast.notify(
-        <span className={notifClass}>
-            {notifIcon}&nbsp;&nbsp;{message}
-        </span>, 
+        notification,
         {
-            duration: 2000,
-            position: 'top-right',
+            duration: 5000,
+            position: 'top',
         }
     );
 }

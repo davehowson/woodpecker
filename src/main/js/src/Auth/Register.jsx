@@ -2,154 +2,184 @@ import React, { useState, useEffect } from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Helmet } from 'react-helmet';
-import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
-import Form from 'react-bootstrap/Form'
-import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import withStyles from '@material-ui/core/styles/withStyles';
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import Link from '@material-ui/core/Link';
 
 import { authenticationService } from '@/Services';
 
 import '@/Auth/Auth.css';
 
+const styles = theme => ({
+    main: {
+        width: 'auto',
+        display: 'block', // Fix IE 11 issue.
+        marginLeft: theme.spacing(3),
+        marginRight: theme.spacing(3),
+        [theme.breakpoints.up(400 + theme.spacing(6))]: {
+            width: 400,
+            marginLeft: 'auto',
+            marginRight: 'auto'
+        }
+    },
+    paper: {
+        marginTop: theme.spacing(15),
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        padding: `${theme.spacing(2)}px ${theme.spacing(3)}px ${theme.spacing(3)}px`
+    },
+    form: {
+        width: '100%', // Fix IE 11 issue.
+        marginTop: theme.spacing(1)
+    },
+    submit: {
+        marginTop: theme.spacing(3)
+    },
+    typography: {
+        marginTop: theme.spacing(3)
+    },
+    link: {
+        margin: theme.spacing(3)
+    }
+});
 
-const Register = (props) => {
+
+const RegisterComponent = (props) => {
 
     useEffect(() => {
         if (authenticationService.currentUserValue) {
-            props.history.push('/app');
+            props.history.push('/app/tasks');
         }
-    })
+    });
 
-    return( 
-        <Container className="auth-container">
-            <Helmet>
-                <style>{'body { background: #870000; background: -webkit-linear-gradient(to left, #190A05, #870000); background: linear-gradient(to left, #190A05, #870000);}'}</style>
-            </Helmet>
-            <Row className="h-100">
-                <Col className="d-flex align-items-center text-white">
-                    <div className="w-75">
-                        <h2 className="mb-3">Register</h2>
-                        <Formik
-                            initialValues={{
-                                name: '',
-                                email: '',
-                                password: '',
-                                passwordConfirm: ''
-                            }}
-                            validationSchema={Yup.object().shape({
-                                name: Yup.string().required('Name is required').max(40,'Too Long!'),
-                                email: Yup.string().email('Invalid email address').required('Email is required').max(40, 'Email address too long'),
-                                password: Yup.string().required('Password is Required').max(100, 'Password too long'),
-                                passwordConfirm: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords do not match')
-                            })}
-                            onSubmit={({ name, email, password }, { setStatus, setSubmitting }) => {
-                                setStatus();
-                                authenticationService.register(name, email, password)
-                                .then(
-                                    user => {
-                                        const { from } = props.location.state || { from: { pathname: "/app" } };
-                                        props.history.push(from);
-                                    },
-                                    error => {
-                                        setSubmitting(false);
-                                        setStatus(error);
-                                    }
-                                );
-                            }}
-                            validateOnChange={false}
-                            validateOnBlur={false}
-                        >
-                            {({
-                                handleSubmit,
-                                handleChange,
-                                values,
-                                touched,
-                                isValid,
-                                errors,
-                            }) => (
-                                <Form noValidate onSubmit={handleSubmit}>
-                                    <Form.Group controlId="formBasicName">
-                                        <Form.Label>Full Name</Form.Label>
-                                        <Form.Control 
-                                            type="text"
-                                            name="name"
-                                            placeholder="Enter name"
-                                            value={values.name}
-                                            onChange={handleChange}
-                                            isInvalid={!!errors.name}
-                                        />
-                                        <Form.Control.Feedback type="invalid">
-                                            {errors.name}
-                                        </Form.Control.Feedback>
-                                    </Form.Group>
+    const { classes } = props;
 
-                                    <Form.Group controlId="formBasicEmail">
-                                        <Form.Label>Email address</Form.Label>
-                                        <Form.Control 
-                                            type="email"
-                                            name="email"
-                                            placeholder="Enter email"
-                                            value={values.email}
-                                            onChange={handleChange}
-                                            isInvalid={!!errors.email}
-                                        />
-                                        <Form.Control.Feedback type="invalid">
-                                            {errors.email}
-                                        </Form.Control.Feedback>
-                                    </Form.Group>
+    return(
+        <main className={classes.main}>
+            <Paper className={classes.paper}>
+                <Typography component="h1" variant="h5">
+                    Register
+               </Typography>
+               <Formik
+                   initialValues={{
+                       name: '',
+                       email: '',
+                       password: '',
+                       passwordConfirm: ''
+                   }}
+                   validationSchema={Yup.object().shape({
+                       name: Yup.string().required('Name is required').max(40,'Too Long!'),
+                       email: Yup.string().email('Invalid email address').required('Email is required').max(40, 'Email address too long'),
+                       password: Yup.string().required('Password is Required').max(100, 'Password too long'),
+                       passwordConfirm: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords do not match')
+                   })}
+                   onSubmit={({ name, email, password }, { setStatus, setSubmitting }) => {
+                       setStatus();
+                       authenticationService.register(name, email, password)
+                       .then(
+                           user => {
+                               const { from } = props.location.state || { from: { pathname: "/app" } };
+                               props.history.push(from);
+                           },
+                           error => {
+                               setSubmitting(false);
+                               setStatus(error);
+                           }
+                       );
+                   }}
+                   validateOnChange={false}
+                   validateOnBlur={false}
+               >
+                   {({
+                       handleSubmit,
+                       handleChange,
+                       values,
+                       touched,
+                       isValid,
+                       errors,
+                   }) => (
+                       <form onSubmit={handleSubmit}>
+                           <TextField
+                                  id="name"
+                                  className={classes.textField}
+                                  name="name"
+                                  label="Name"
+                                  fullWidth={true}
+                                  margin="dense"
+                                  helperText={touched.name ? errors.name : ""}
+                                  error={touched.name && Boolean(errors.name)}
+                                  value={values.name}
+                                  onChange={handleChange}
+                            />
 
-                                    <Form.Group controlId="formBasicPassword">
-                                        <Form.Label>Password</Form.Label>
-                                        <Form.Control
-                                            type="password" 
-                                            name="password"
-                                            placeholder="Password"
-                                            value={values.password}
-                                            onChange={handleChange}
-                                            isInvalid={!!errors.password}    
-                                        />
-                                        <Form.Control.Feedback type="invalid">
-                                            {errors.password}
-                                        </Form.Control.Feedback>
-                                    </Form.Group>
+                            <TextField
+                                  id="email"
+                                  className={classes.textField}
+                                  name="email"
+                                  label="Email Address"
+                                  fullWidth={true}
+                                  margin="dense"
+                                  helperText={touched.email ? errors.email : ""}
+                                  error={touched.email && Boolean(errors.email)}
+                                  value={values.email}
+                                  onChange={handleChange}
+                            />
 
-                                    <Form.Group controlId="formBasicPasswordConfirm">
-                                        <Form.Label>Confirm Password</Form.Label>
-                                        <Form.Control
-                                            type="password" 
-                                            name="passwordConfirm"
-                                            placeholder="Re-enter Password"
-                                            value={values.passwordConfirm}
-                                            onChange={handleChange}
-                                            isInvalid={!!errors.passwordConfirm}    
-                                        />
-                                        <Form.Control.Feedback type="invalid">
-                                            {errors.passwordConfirm}
-                                        </Form.Control.Feedback>
-                                    </Form.Group>
+                            <TextField
+                                   id="password"
+                                   className={classes.textField}
+                                   name="password"
+                                   label="Password"
+                                   fullWidth={true}
+                                   margin="dense"
+                                   helperText={touched.password ? errors.password : ""}
+                                   error={touched.password && Boolean(errors.password)}
+                                   value={values.password}
+                                   onChange={handleChange}
+                                   type="password"
+                            />
 
-                                    <Button variant="light" type="submit">
-                                        Submit
-                                    </Button>
-                                </Form>
-                            )}
-                        </Formik>
-                        <Link to="/login">
-                            <Button variant="link" type="submit" className="text-white pl-0 mt-3">
-                                Already have an account?
+                            <TextField
+                                   id="passwordConfirm"
+                                   className={classes.textField}
+                                   name="passwordConfirm"
+                                   label="Confirm Password"
+                                   fullWidth={true}
+                                   margin="dense"
+                                   helperText={touched.passwordConfirm ? errors.passwordConfirm : ""}
+                                   error={touched.passwordConfirm && Boolean(errors.passwordConfirm)}
+                                   value={values.passwordConfirm}
+                                   onChange={handleChange}
+                                   type="password"
+                            />
+
+                           <Button type="submit" fullWidth={true} variant="contained" color="primary" className={classes.submit}>
+                                Register
                             </Button>
-                        </Link>
-                   </div>
-                </Col>
-                <Col>
-                    
-                </Col>
-            </Row>
-        </Container>
+                       </form>
+                   )}
+               </Formik>
+               <Typography className={classes.typography}>
+                   <Link href="/login" className={classes.link}>
+                       Already have an account?
+                   </Link>
+               </Typography>
+           </Paper>
+       </main>
     )
 }
+
+RegisterComponent.propTypes = {
+    classes: PropTypes.object.isRequired
+};
+
+const Register = withStyles(styles)(RegisterComponent);
 
 export { Register }
