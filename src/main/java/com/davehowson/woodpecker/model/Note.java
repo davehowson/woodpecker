@@ -24,7 +24,7 @@ public class Note extends UserDateAudit {
     private String title;
 
     @NotBlank
-    @Size(max = 2000)
+    @Size(max = 3000)
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

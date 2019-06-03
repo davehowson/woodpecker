@@ -40,7 +40,7 @@ public class NoteService extends ServiceInterface {
                 .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
 
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.ASC, "createdAt");
-        Page<Note> notes = noteRepository.findByCreatedByOrderByImportantDesc(user.getId(), pageable);
+        Page<Note> notes = noteRepository.findByUserOrderByImportantDesc(user, pageable);
 
         return returnPagedResponse(notes);
     }
@@ -52,7 +52,7 @@ public class NoteService extends ServiceInterface {
                 .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
 
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdAt");
-        Page<Note> notes = noteRepository.findByCreatedByAndTagOrderByImportantDesc(user.getId(), tag, pageable);
+        Page<Note> notes = noteRepository.findByUserAndTagOrderByImportantDesc(user, tag, pageable);
 
         return returnPagedResponse(notes);
     }
@@ -73,7 +73,7 @@ public class NoteService extends ServiceInterface {
         String email = currentUser.getEmail();
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
-        Note note = noteRepository.findByIdAndCreatedBy(noteId, user.getId())
+        Note note = noteRepository.findByIdAndUser(noteId, user)
                 .orElseThrow(() -> new ResourceNotFoundException("Note", "note id", noteId));
         return ModelMapper.mapNoteToNoteResponse(note);
     }

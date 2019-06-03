@@ -53,7 +53,10 @@ const useStyles = makeStyles(theme => ({
         [theme.breakpoints.up('md')]: {
             maxHeight: '74vh',
             minHeight: '70vh',
-            overflow: 'auto'
+            overflow: 'auto',
+            background: '#f7f7f7',
+            padding: 3,
+            borderRadius: 5
         }
     },
     title: {

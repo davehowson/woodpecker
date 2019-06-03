@@ -56,7 +56,8 @@ const useStyles = makeStyles(theme => ({
         marginTop: theme.spacing(2)
     },
     saveButtons: {
-       marginLeft: 'auto'
+       marginLeft: 'auto',
+        textAlign: 'right'
     },
     deleteIcon: {
         marginRight: theme.spacing(1)
@@ -129,8 +130,8 @@ const EditNote = (props) => {
                     tag: noteTag,
                     important: noteImportant
                 }} validationSchema={Yup.object().shape({
-                    title: Yup.string().max(30, 'Title is too long').required('Title is required'),
-                    description: Yup.string().max(1000, 'Description is too long').required('Description is required'),
+                    title: Yup.string().max(100, 'Title is too long').required('Title is required'),
+                    description: Yup.string().max(3000, 'Description is too long').required('Description is required'),
                 })} onSubmit={({
                     title,
                     description,
@@ -210,28 +211,29 @@ const EditNote = (props) => {
                                             </FormHelperText>
                                         </FormControl>
                                     </Grid>
-                                    <Grid item={true} xs={6}>
-                                        <FormControl className={classes.formControl}>
-                                            <InputLabel htmlFor="tag-simple">Tag</InputLabel>
-                                            <Select value={values.tag} onChange={handleChange} inputProps={{
-                                                    name: 'tag',
-                                                    id: 'tag-simple'
-                                                }} classes={{
-                                                    select: classes.select
-                                                }}>
-                                                <MenuItem value="">
-                                                    <em>None</em>
-                                                </MenuItem>
-                                                <MenuItem value="WORK">Work</MenuItem>
-                                                <MenuItem value="PERSONAL">Personal</MenuItem>
-                                                <MenuItem value="OTHER">Other</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
+
                                     <Grid item xs={12} className={classes.buttonRow}>
                                         <Grid container alignItems="center">
+                                            <Grid item={true} sm={4}>
+                                                <FormControl className={classes.formControl}>
+                                                    <InputLabel htmlFor="tag-simple">Tag</InputLabel>
+                                                    <Select value={values.tag} onChange={handleChange} inputProps={{
+                                                        name: 'tag',
+                                                        id: 'tag-simple'
+                                                    }} classes={{
+                                                        select: classes.select
+                                                    }}>
+                                                        <MenuItem value="">
+                                                            <em>None</em>
+                                                        </MenuItem>
+                                                        <MenuItem value="WORK">Work</MenuItem>
+                                                        <MenuItem value="PERSONAL">Personal</MenuItem>
+                                                        <MenuItem value="OTHER">Other</MenuItem>
+                                                    </Select>
+                                                </FormControl>
+                                            </Grid>
                                             {noteId&&
-                                                <Grid item>
+                                                <Grid item sm={4}>
                                                     <IconButton aria-label="Delete" className={classes.deleteIcon} onClick={handleDeleteClick}>
                                                         <DeleteIcon />
                                                     </IconButton>
@@ -242,7 +244,7 @@ const EditNote = (props) => {
                                                     </Slide>
                                                 </Grid>
                                             }
-                                            <Grid item className={classes.saveButtons}>
+                                            <Grid item sm={4} className={classes.saveButtons}>
                                                 <Button color="primary" onClick={handleClear}>
                                                     Cancel
                                                 </Button>

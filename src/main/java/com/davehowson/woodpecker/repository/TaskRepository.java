@@ -1,6 +1,7 @@
 package com.davehowson.woodpecker.repository;
 
 import com.davehowson.woodpecker.model.Task;
+import com.davehowson.woodpecker.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,8 +15,8 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     Optional<Task> findById(Long taskId);
     void deleteById(Long taskId);
-    Set<Task> findByCreatedByAndDateIsOrderByCompleteAsc(Long userId, LocalDate date);
-    List<Task> findByCreatedByAndDateBeforeOrDateIsNullOrderByDateDesc(Long userId, LocalDate date);
-    List<Task> findByCreatedByAndDateBetweenOrderByDateAsc(Long id, LocalDate start, LocalDate end);
-    List<Task> findTop6ByCreatedByAndDateBetweenOrderByDateAsc(Long id, LocalDate start, LocalDate end);
+    Set<Task> findByUserAndDateIsOrderByCompleteAsc(User user, LocalDate date);
+    List<Task> findByUserAndDateBeforeOrDateIsNullOrderByDateDesc(User user, LocalDate date);
+    List<Task> findByUserAndDateBetweenOrderByDateAsc(User user, LocalDate start, LocalDate end);
+    List<Task> findTop6ByUserAndDateBetweenOrderByDateAsc(User user, LocalDate start, LocalDate end);
 }

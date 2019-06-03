@@ -32,14 +32,14 @@ public class TaskService extends ServiceInterface {
 
     public List<TaskResponse> getTaskListOnDate(UserPrincipal currentUser, LocalDate date) {
         User user = getUser(currentUser);
-        Set<Task> tasks = taskRepository.findByCreatedByAndDateIsOrderByCompleteAsc(user.getId(), date);
+        Set<Task> tasks = taskRepository.findByUserAndDateIsOrderByCompleteAsc(user, date);
         return tasks.stream()
                 .map(ModelMapper::mapTaskToTaskResponse).collect(Collectors.toList());
     }
 
     public List<TaskResponse> getTaskListOverdue(UserPrincipal currentUser, LocalDate date) {
         User user = getUser(currentUser);
-        List<Task> tasks = taskRepository.findByCreatedByAndDateBeforeOrDateIsNullOrderByDateDesc(user.getId(), date);
+        List<Task> tasks = taskRepository.findByUserAndDateBeforeOrDateIsNullOrderByDateDesc(user, date);
         return tasks.stream()
                 .filter(task -> !task.isComplete())
                 .map(ModelMapper::mapTaskToTaskResponse).collect(Collectors.toList());
@@ -47,7 +47,7 @@ public class TaskService extends ServiceInterface {
 
     public List<TaskResponse> getTaskListUpcoming(UserPrincipal currentUser, LocalDate start, LocalDate end) {
         User user = getUser(currentUser);
-        List<Task> tasks = taskRepository.findByCreatedByAndDateBetweenOrderByDateAsc(user.getId(), start, end);
+        List<Task> tasks = taskRepository.findByUserAndDateBetweenOrderByDateAsc(user, start, end);
         return tasks.stream()
                 .filter(task -> !task.isComplete())
                 .map(ModelMapper::mapTaskToTaskResponse).collect(Collectors.toList());
@@ -55,7 +55,7 @@ public class TaskService extends ServiceInterface {
 
     public List<TaskResponse> getTaskListUpcomingDashboard(UserPrincipal currentUser, LocalDate start, LocalDate end) {
         User user = getUser(currentUser);
-        List<Task> tasks = taskRepository.findTop6ByCreatedByAndDateBetweenOrderByDateAsc(user.getId(), start, end);
+        List<Task> tasks = taskRepository.findTop6ByUserAndDateBetweenOrderByDateAsc(user, start, end);
         return tasks.stream()
                 .filter(task -> !task.isComplete())
                 .map(ModelMapper::mapTaskToTaskResponse).collect(Collectors.toList());
@@ -63,7 +63,7 @@ public class TaskService extends ServiceInterface {
 
     public List<TaskResponse> getTaskListCompleted(UserPrincipal currentUser, LocalDate start, LocalDate end) {
         User user = getUser(currentUser);
-        List<Task> tasks = taskRepository.findByCreatedByAndDateBetweenOrderByDateAsc(user.getId(), start, end);
+        List<Task> tasks = taskRepository.findByUserAndDateBetweenOrderByDateAsc(user, start, end);
         return tasks.stream()
                 .filter(Task::isComplete)
                 .map(ModelMapper::mapTaskToTaskResponse).collect(Collectors.toList());
