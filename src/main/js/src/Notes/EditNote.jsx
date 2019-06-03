@@ -7,6 +7,7 @@ import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Select from '@material-ui/core/Select';
+import OutlinedInput from '@material-ui/core/OutlinedInput';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -61,11 +62,6 @@ const useStyles = makeStyles(theme => ({
     },
     deleteIcon: {
         marginRight: theme.spacing(1)
-    },
-    select: {
-        '&:focus': {
-            backgroundColor: '#fff'
-        }
     },
     helperText: {
         marginTop: theme.spacing(2)
@@ -168,11 +164,15 @@ const EditNote = (props) => {
                             <form onSubmit={handleSubmit} className={classes.form}>
                                 <Grid container={true} spacing={2}>
                                     <Grid item={true} xs={10}>
-                                        <TextField id="title" className={classes.textField} name="title" label="Title" fullWidth={true}
-                                        helperText={touched.title ? errors.title : ""}
-                                        error={touched.title && Boolean(errors.title)}
-                                        value={values.title}
-                                        onChange={handleChange}
+                                        <TextField
+                                            id="title" className={classes.textField}
+                                            name="title" label="Title" fullWidth={true}
+                                            variant="outlined"
+                                            margin="dense"
+                                            helperText={touched.title ? errors.title : ""}
+                                            error={touched.title && Boolean(errors.title)}
+                                            value={values.title}
+                                            onChange={handleChange}
                                     />
                                     </Grid>
                                     <Grid item={true} xs={2} className={classes.importantRow}>
@@ -215,14 +215,17 @@ const EditNote = (props) => {
                                     <Grid item xs={12} className={classes.buttonRow}>
                                         <Grid container alignItems="center">
                                             <Grid item={true} sm={4}>
-                                                <FormControl className={classes.formControl}>
-                                                    <InputLabel htmlFor="tag-simple">Tag</InputLabel>
-                                                    <Select value={values.tag} onChange={handleChange} inputProps={{
-                                                        name: 'tag',
-                                                        id: 'tag-simple'
-                                                    }} classes={{
-                                                        select: classes.select
-                                                    }}>
+                                                <FormControl variant="outlined" className={classes.formControl}>
+                                                    <InputLabel htmlFor="tag-outlined">Tag</InputLabel>
+                                                    <Select
+                                                        value={values.tag}
+                                                        onChange={handleChange}
+                                                        inputProps={{
+                                                            name: 'tag',
+                                                            id: 'tag-outlined'
+                                                        }}
+                                                        input={<OutlinedInput labelWidth={25} name="age" id="outlined-tag" />}
+                                                    >
                                                         <MenuItem value="">
                                                             <em>None</em>
                                                         </MenuItem>
