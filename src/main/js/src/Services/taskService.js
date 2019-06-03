@@ -8,9 +8,9 @@ export const taskService = {
     create
 };
 
-function getTasks(scope, date) {
+function getTasks(scope) {
     const requestOptions = { method: 'GET', headers: authHeader() };
-    return fetch(`${process.env.API_URL}/tasks/${scope}?date=${date}`, requestOptions)
+    return fetch(`${process.env.API_URL}/tasks?scope=${scope}`, requestOptions)
         .then(handleResponse)
         .catch(function(error){
             handleNotification("error", "Unable to Fetch Tasks")

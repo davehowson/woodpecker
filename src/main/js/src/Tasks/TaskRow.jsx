@@ -74,15 +74,15 @@ const TaskRow = (props) => {
         } else {
             setRowClass('')
         }
-    }, [])
+    }, []);
 
     const handleCheckbox = (e) => {
         setIsChecked(e.target.checked)
         if (e.target.checked) {
-            setRowClass(classes.completedDescription)
+            setRowClass(classes.completedDescription);
             handleNotification("success", "Task Marked Complete");
         } else {
-            setRowClass('')
+            setRowClass('');
             handleNotification("warning", "Task Marked Incomplete");
         }
 
@@ -92,7 +92,7 @@ const TaskRow = (props) => {
     }
 
     const capitalize = (s) => {
-        if (typeof s !== 'string') return ''
+        if (typeof s !== 'string') return '';
         return s.charAt(0).toUpperCase() + s.slice(1);
     }
 
@@ -100,7 +100,7 @@ const TaskRow = (props) => {
     const handleTag = () => {
         if (props.task.tag != null) {
             return (<Tooltip title={capitalize(props.task.tag)}>
-                <span className={classNames(classes.dot, classes["dot"+props.task.tag.toLowerCase()])}></span>
+                <span className={classNames(classes.dot, classes["dot"+props.task.tag.toLowerCase()])}/>
             </Tooltip>);
         }
         return '';
@@ -116,7 +116,7 @@ const TaskRow = (props) => {
         }
 
         return date;
-    }
+    };
 
     return (
         <TableRow className={classes.tableRow} key={props.task.id}>

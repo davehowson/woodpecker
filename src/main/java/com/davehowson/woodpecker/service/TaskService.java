@@ -30,43 +30,83 @@ public class TaskService extends ServiceInterface {
         this.taskRepository = taskRepository;
     }
 
-    public List<TaskResponse> getTaskListOnDate(UserPrincipal currentUser, LocalDate date) {
+    private List<TaskResponse> getTaskListOnDate(UserPrincipal currentUser, LocalDate date, String tag) {
         User user = getUser(currentUser);
         Set<Task> tasks = taskRepository.findByUserAndDateIsOrderByCompleteAsc(user, date);
+
+        if (tag != null && !tag.equalsIgnoreCase("all")) {
+            return tasks.stream()
+                    .filter(task -> Objects.nonNull(task.getTag()))
+                    .filter(task -> task.getTag().equalsIgnoreCase(tag))
+                    .map(ModelMapper::mapTaskToTaskResponse).collect(Collectors.toList());
+        }
+
         return tasks.stream()
                 .map(ModelMapper::mapTaskToTaskResponse).collect(Collectors.toList());
     }
 
-    public List<TaskResponse> getTaskListOverdue(UserPrincipal currentUser, LocalDate date) {
+    private List<TaskResponse> getTaskListOverdue(UserPrincipal currentUser, LocalDate date, String tag) {
         User user = getUser(currentUser);
         List<Task> tasks = taskRepository.findByUserAndDateBeforeOrDateIsNullOrderByDateDescTimeAsc(user, date);
-        return tasks.stream()
-                .filter(task -> !task.isComplete())
-                .map(ModelMapper::mapTaskToTaskResponse).collect(Collectors.toList());
+
+        return filterCompletedTasks(tasks, tag);
     }
 
-    public List<TaskResponse> getTaskListUpcoming(UserPrincipal currentUser, LocalDate start, LocalDate end) {
+    private List<TaskResponse> getTaskListUpcoming(UserPrincipal currentUser, LocalDate start, LocalDate end, String tag) {
         User user = getUser(currentUser);
         List<Task> tasks = taskRepository.findByUserAndDateBetweenOrderByDateAscTimeAsc(user, start, end);
+
+        return filterCompletedTasks(tasks, tag);
+    }
+
+    private List<TaskResponse> filterCompletedTasks(List<Task> tasks, String tag) {
+        if (tag != null && !tag.equalsIgnoreCase("all")) {
+            return tasks.stream()
+                    .filter(task -> Objects.nonNull(task.getTag()))
+                    .filter(task -> task.getTag().equalsIgnoreCase(tag))
+                    .filter(task -> !task.isComplete())
+                    .map(ModelMapper::mapTaskToTaskResponse).collect(Collectors.toList());
+        }
+
         return tasks.stream()
                 .filter(task -> !task.isComplete())
                 .map(ModelMapper::mapTaskToTaskResponse).collect(Collectors.toList());
     }
 
-    public List<TaskResponse> getTaskListUpcomingDashboard(UserPrincipal currentUser, LocalDate start, LocalDate end) {
-        User user = getUser(currentUser);
-        List<Task> tasks = taskRepository.findTop6ByUserAndDateBetweenOrderByDateAscTimeAsc(user, start, end);
-        return tasks.stream()
-                .filter(task -> !task.isComplete())
-                .map(ModelMapper::mapTaskToTaskResponse).collect(Collectors.toList());
-    }
 
-    public List<TaskResponse> getTaskListCompleted(UserPrincipal currentUser, LocalDate start, LocalDate end) {
+    private List<TaskResponse> getTaskListCompleted(UserPrincipal currentUser, LocalDate start, LocalDate end, String tag) {
         User user = getUser(currentUser);
         List<Task> tasks = taskRepository.findByUserAndDateBetweenOrderByDateAscTimeAsc(user, start, end);
+        if (tag != null && !tag.equalsIgnoreCase("all")) {
+            return tasks.stream()
+                    .filter(task -> Objects.nonNull(task.getTag()))
+                    .filter(task -> task.getTag().equalsIgnoreCase(tag))
+                    .filter(Task::isComplete)
+                    .map(ModelMapper::mapTaskToTaskResponse).collect(Collectors.toList());
+        }
         return tasks.stream()
                 .filter(Task::isComplete)
                 .map(ModelMapper::mapTaskToTaskResponse).collect(Collectors.toList());
+    }
+
+    public Map<String, List<TaskResponse>> getTasks(UserPrincipal currentUser, String tag) {
+        LocalDate date = LocalDate.now();
+
+        Map<String, List<TaskResponse>> resp = new HashMap<>();
+        resp.put("today", getTaskListOnDate(currentUser, date, tag));
+
+        LocalDate start = LocalDate.now().plusDays(1);
+        LocalDate end = LocalDate.now().plusDays(15);
+        resp.put("upcoming", getTaskListUpcoming(currentUser, start, end, tag));
+
+        resp.put("overdue", getTaskListOverdue(currentUser, date, tag));
+
+        LocalDate startComp = LocalDate.now().minusDays(7);
+        LocalDate endComp = LocalDate.now().plusDays(7);
+
+        resp.put("completed", getTaskListCompleted(currentUser, startComp, endComp, tag));
+
+        return resp;
     }
 
     public Task createTask(TaskRequest taskRequest, String email) {

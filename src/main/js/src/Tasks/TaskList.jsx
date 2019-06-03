@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import moment from 'moment';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import Grid from '@material-ui/core/Grid';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
@@ -13,7 +12,6 @@ import Divider from '@material-ui/core/Divider';
 
 
 import { TaskRow } from '@/Tasks';
-import { taskService } from '@/Services';
 
 
 const useStyles = makeStyles(theme => ({
@@ -52,37 +50,25 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const TaskList = (props) => {
-    const [tasks, setTasks] = useState(null);
+
     const [expanded, setExpanded] = useState(props.expanded)
 
     const classes = useStyles();
 
-    useEffect(() => {
-        let didCancel = false;
-
-        if (!didCancel)
-        {
-            taskService.getTasks(props.taskNav, moment().format('YYYY-MM-DD')).then(tasks => setTasks(tasks));
-        }
-        return () => {
-            didCancel = true;
-        }
-    }, [props.taskNav, props.taskModalStatus]);
-
     const handleExpansion = () => {
         setExpanded(!expanded);
-    }
+    };
 
     const titleToUpper = () => {
         const taskNav = props.taskNav;
         if (typeof taskNav !== 'string') return '';
         return taskNav.charAt(0).toUpperCase() + taskNav.slice(1);
-    }
+    };
 
     const taskCount = () => {
-        if (tasks != null) return tasks.length;
+        if (props.tasks != null) return props.tasks.length;
         return 0
-    }
+    };
 
     return (
         <React.Fragment>
@@ -109,11 +95,11 @@ const TaskList = (props) => {
                     <Divider/>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails className={classes.expansionPanelDetails}>
-                    {tasks && tasks.length > 0 ?
+                    {props.tasks && props.tasks.length > 0 ?
                         (<Table className={classes.table}>
                             <TableBody>
-                                {tasks.map(task =>
-                                   <TaskRow task={task} key={task.id} taskNav={props.taskNav} />
+                                {props.tasks.map(task =>
+                                   <TaskRow task={task} key={task.id} />
                                 )}
                             </TableBody>
                         </Table>) : (
