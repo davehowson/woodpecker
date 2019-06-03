@@ -76,17 +76,15 @@ public class DatabaseSeeder {
         faker = new Faker();
         LocalDate date = LocalDate.now();
         for (int i = 0; i < 10; i++) {
-            for (int x = 0; x < 2; x++) {
-                Task task = new Task();
-                task.setDescription(faker.harryPotter().quote());
-                task.setTag(getTag());
-                task.setUser(user);
-                task.setDate(date.plusDays(i));
-                LocalTime localTime = faker.date().future(5, TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalTime();
-                task.setTime(localTime);
-                task.setComplete(new Random().nextBoolean());
-                taskRepository.save(task);
-            }
+            Task task = new Task();
+            task.setDescription(faker.harryPotter().quote());
+            task.setTag(getTag());
+            task.setUser(user);
+            task.setDate(date.plusDays(i));
+            LocalTime localTime = faker.date().future(5, TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalTime();
+            task.setTime(localTime);
+            task.setComplete(new Random().nextBoolean());
+            taskRepository.save(task);
         }
     }
 

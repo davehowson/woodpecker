@@ -51,8 +51,8 @@ public class TaskController {
     @GetMapping("/upcoming")
     @PreAuthorize("hasRole('USER')")
     public List<TaskResponse> getTasksUpcoming(@CurrentUser UserPrincipal currentUser) {
-        LocalDate start = LocalDate.now();
-        LocalDate end = LocalDate.now().plusDays(14);
+        LocalDate start = LocalDate.now().plusDays(1);
+        LocalDate end = LocalDate.now().plusDays(15);
         return taskService.getTaskListUpcoming(currentUser, start, end);
     }
 
