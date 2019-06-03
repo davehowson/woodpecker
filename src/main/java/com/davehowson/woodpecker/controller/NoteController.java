@@ -35,16 +35,20 @@ public class NoteController {
     @GetMapping("/tag")
     public PagedResponse<NoteResponse> getNotesByTag(@CurrentUser UserPrincipal currentUser,
                                                      @RequestParam(value = "tag", defaultValue = "ALL") String tag,
-                                                @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
-                                                @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
-        return noteService.getNotesCreatedByAndTagged(currentUser, tag, page, size);
+                                                     @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+                                                     @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
+                                                     @RequestParam(value = "sort", defaultValue = "CreatedAt") String sort,
+                                                     @RequestParam(value = "direction", defaultValue = "asc") String direction) {
+        return noteService.getNotesCreatedByAndTagged(currentUser, tag, page, size, sort, direction);
     }
 
     @GetMapping
     public PagedResponse<NoteResponse> getNotes(@CurrentUser UserPrincipal currentUser,
                                                 @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
-                                                @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
-        return noteService.getNotesCreatedBy(currentUser, page, size);
+                                                @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
+                                                @RequestParam(value = "sort", defaultValue = "CreatedAt") String sort,
+                                                @RequestParam(value = "direction", defaultValue = "asc") String direction) {
+        return noteService.getNotesCreatedBy(currentUser, page, size, sort, direction);
     }
 
     @GetMapping("/note")

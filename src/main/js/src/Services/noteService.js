@@ -9,11 +9,11 @@ export const noteService = {
     create
 };
 
-function getNotesByTag(pageNumber, tag) {
+function getNotesByTag(pageNumber, tag, sort, direction) {
     const requestOptions = { method: 'GET', headers: authHeader() };
-    let url = `${process.env.API_URL}/notes?page=${pageNumber}&size=8`;;
+    let url = `${process.env.API_URL}/notes?page=${pageNumber}&size=8&sort=${sort}&direction=${direction}`;
     if (tag != 'all') {
-        url = `${process.env.API_URL}/notes/tag?tag=${tag.toUpperCase()}&page=${pageNumber}&size=8`;
+        url = `${process.env.API_URL}/notes/tag?tag=${tag.toUpperCase()}&page=${pageNumber}&size=8&sort=${sort}&direction=${direction}`;
     }
 
     return fetch(url, requestOptions)

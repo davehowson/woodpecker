@@ -9,6 +9,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 import Tooltip from '@material-ui/core/Tooltip';
 import Button from '@material-ui/core/Button';
+import StarIcon from '@material-ui/icons/Star';
 
 import { noteService } from '@/Services';
 
@@ -36,6 +37,13 @@ const useStyles = makeStyles(theme => ({
     dotother: {
         backgroundColor: "#a3a3a3"
     },
+    star: {
+        fontSize: 14,
+        marginRight: theme.spacing(1),
+        color: theme.palette.primary.dark,
+        display: "inline-block",
+        verticalAlign: "middle"
+    },
     taskDesc: {
         transition: "color 1s"
     },
@@ -43,7 +51,8 @@ const useStyles = makeStyles(theme => ({
         color: '#8f8f8f'
     },
     loadMore: {
-        marginTop: theme.spacing(2)
+        marginTop: theme.spacing(2),
+        marginBottom: theme.spacing(2)
     }
 }));
 
@@ -55,40 +64,40 @@ const NotesList = (props) => {
     const classes = useStyles();
 
     useEffect(() => {
-        noteService.getNotesByTag(0, props.notesCategory).then(responseNotes => {
+        noteService.getNotesByTag(0, props.notesCategory, props.notesSort, props.notesSortDirection).then(responseNotes => {
             setNotes(responseNotes.content);
             setLastPage(responseNotes.last);
         });
         setCurrentPage(0);
         props.setReRender(false);
-    }, [props.notesCategory, props.reRender]);
+    }, [props.notesCategory, props.reRender, props.notesSort, props.notesSortDirection]);
 
     const handleLoadMore = () => {
         let current = currentPage + 1
-        noteService.getNotesByTag(current, props.notesCategory).then(responseNotes => {
+        noteService.getNotesByTag(current, props.notesCategory, props.notesSort, props.notesSortDirection).then(responseNotes => {
             setNotes(n => n.concat(responseNotes.content));
             setLastPage(responseNotes.last);
         });
         setCurrentPage(current);
-    }
+    };
 
     const handleTag = (tag) => {
         if (tag != null) {
             return (<Tooltip title={capitalize(tag)}>
-                <span className={classNames(classes.dot, classes["dot"+tag.toLowerCase()])}></span>
+                <span className={classNames(classes.dot, classes["dot"+tag.toLowerCase()])}/>
             </Tooltip>);
         }
         return '';
-    }
+    };
 
     const capitalize = (s) => {
         if (typeof s !== 'string') return ''
         return s.charAt(0).toUpperCase() + s.slice(1);
-    }
+    };
 
     const handleDate = (date) => {
         return moment(date).format("MMM Do");
-    }
+    };
 
 
     return (
@@ -110,6 +119,9 @@ const NotesList = (props) => {
                                         primary={note.title}
                                         secondary={
                                             <React.Fragment>
+                                                {note.important&&
+                                                    <StarIcon className={classes.star} />
+                                                }
                                                 <Typography
                                                     component="span"
                                                     variant="body2"

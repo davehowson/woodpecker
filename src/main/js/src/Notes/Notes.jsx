@@ -9,8 +9,10 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
+import SortIcon from '@material-ui/icons/Sort';
 
 import { NotesList, EditNote } from '@/Notes';
+import { Menu, MenuItem, IconButton} from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -48,11 +50,21 @@ const useStyles = makeStyles(theme => ({
             fontWeight: 500
         },
     },
+    addButton: {
+        padding: theme.spacing(0, 1),
+        fontSize: theme.typography.pxToRem(12),
+    },
+    sortButton: {
+        color: '#a2a2a2',
+    },
+    sortRow: {
+        paddingBottom: theme.spacing(1),
+        display: "flex"
+    },
     listRow: {
         textAlign: "center",
         [theme.breakpoints.up('md')]: {
-            maxHeight: '74vh',
-            minHeight: '70vh',
+            height: '65vh',
             overflow: 'auto',
             background: '#f7f7f7',
             padding: 3,
@@ -78,16 +90,33 @@ const useStyles = makeStyles(theme => ({
 
 const Notes = () => {
     const [notesCategory, setNotesCategory] = useState("all");
+    const [notesSort, setNotesSort] = useState("createdAt");
+    const [notesSortDirection, setNotesSortDirection] = useState("desc");
     const [noteId, setNoteId] = useState(null);
-    const [taskHeader, setTaskHeader] = useState("Add Task");
+    const [taskHeader, setTaskHeader] = useState("Add Note");
     const [reRender, setReRender] = useState(false);
+    const [anchorEl, setAnchorEl] = useState(null);
 
     const classes = useStyles();
     const noteCategories = ["All", "Work", "Personal", "Other"];
 
+    const handleSortOpen = (event) => {
+        setAnchorEl(event.currentTarget)
+    };
+
+    const handleSortClose = () => {
+        setAnchorEl(null);
+    };
+
+    const handleSortChange = (sort, direction) => {
+        setNotesSort(sort);
+        setNotesSortDirection(direction);
+        handleSortClose();
+    };
+
     const handleCategory = (category) => {
         setNotesCategory(category);
-    }
+    };
 
     return (
         <React.Fragment>
@@ -98,10 +127,54 @@ const Notes = () => {
                 <Card className={classes.card}>
                     <CardContent>
                         <Grid container spacing={4}>
-                            <Grid item md={3} sm={12}>
+                            <Grid item md={4} sm={12}>
                                 <Grid container>
+
                                     <Grid item xs={12}>
                                         <List className={classes.categories} component="nav" dense disablePadding>
+                                            <IconButton
+                                                className={classes.sortButton}
+                                                aria-owns={anchorEl ? 'simple-menu' : undefined}
+                                                aria-haspopup="true"
+                                                onClick={handleSortOpen}
+                                            >
+                                                <SortIcon />
+                                            </IconButton>
+                                            <Menu
+                                                id="sort-menu"
+                                                anchorEl={anchorEl}
+                                                open={Boolean(anchorEl)}
+                                                onClose={handleSortClose}
+                                                getContentAnchorEl={null}
+                                                anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+                                                transformOrigin={{ vertical: "top", horizontal: "left" }}
+                                            >
+                                                <MenuItem disabled>Sort By</MenuItem>
+                                                <MenuItem
+                                                    selected={notesSort === 'createdAt' && notesSortDirection === 'desc'}
+                                                    onClick={() => handleSortChange('createdAt', 'desc')}
+                                                >
+                                                    Date Created: Descending
+                                                </MenuItem>
+                                                <MenuItem
+                                                    onClick={() => handleSortChange('createdAt', 'asc')}
+                                                    selected={notesSort === 'createdAt' && notesSortDirection === 'asc'}
+                                                >
+                                                    Date Created: Ascending
+                                                </MenuItem>
+                                                <MenuItem
+                                                    onClick={() => handleSortChange('title', 'desc')}
+                                                    selected={notesSort === 'title' && notesSortDirection === 'desc'}
+                                                >
+                                                    Title: Descending
+                                                </MenuItem>
+                                                <MenuItem
+                                                    onClick={() => handleSortChange('title', 'asc')}
+                                                    selected={notesSort === 'title' && notesSortDirection === 'asc'}
+                                                >
+                                                    Title: Ascending
+                                                </MenuItem>
+                                            </Menu>
                                             {noteCategories.map(item =>
                                                 <ListItem
                                                     className={classes.category}
@@ -116,19 +189,23 @@ const Notes = () => {
                                                 </ListItem>
                                             )}
                                         </List>
+
+
                                     </Grid>
                                     <Grid item xs={12} className={classes.listRow}>
                                         <NotesList
                                             notesCategory={notesCategory}
                                             noteId={noteId}
                                             setNoteId={setNoteId}
+                                            notesSort={notesSort}
+                                            notesSortDirection={notesSortDirection}
                                             reRender={reRender}
                                             setReRender={setReRender}
                                         />
                                     </Grid>
                                 </Grid>
                             </Grid>
-                            <Grid item md={9} sm={12}>
+                            <Grid item md={8} sm={12}>
                                 <Grid container>
                                     <Grid item xs={12} className={classes.title}>
                                         <Typography componenet="h2" variant="h5">{taskHeader}</Typography>

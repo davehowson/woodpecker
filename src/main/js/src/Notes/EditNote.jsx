@@ -48,7 +48,7 @@ const useStyles = makeStyles(theme => ({
         margin: theme.spacing(1, 0, 0)
     },
     quill: {
-        height: 200,
+        height: 250,
         marginTop: theme.spacing(1),
         marginBottom: theme.spacing(4)
     },
@@ -92,7 +92,7 @@ const EditNote = (props) => {
                     setNoteTag(note.tag);
                 }
                 setNoteImportant(note.important);
-                props.setTaskHeader("Edit Task");
+                props.setTaskHeader("Edit Note");
             });
 
     }, [props.noteId]);
@@ -104,7 +104,7 @@ const EditNote = (props) => {
         setNoteDescription('');
         setNoteTag('');
         setNoteImportant(false);
-        props.setTaskHeader("Add Task")
+        props.setTaskHeader("Add Note")
         props.setNoteId(null)
     }
 
@@ -123,7 +123,7 @@ const EditNote = (props) => {
     const classes = useStyles();
 
     return (<Grid container justify="center">
-        <Grid item xs={9}>
+        <Grid item xs={10}>
             <Formik initialValues={{
                     title: noteTitle,
                     description: noteDescription,

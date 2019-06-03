@@ -33,25 +33,35 @@ public class NoteService extends ServiceInterface {
         this.noteRepository = noteRepository;
     }
 
-    public PagedResponse<NoteResponse> getNotesCreatedBy(UserPrincipal currentUser, int page, int size) {
+    public PagedResponse<NoteResponse> getNotesCreatedBy(UserPrincipal currentUser, int page, int size, String sort, String direction) {
         validatePageNumberAndSize(page, size);
         String email = currentUser.getEmail();
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
 
-        Pageable pageable = PageRequest.of(page, size, Sort.Direction.ASC, "createdAt");
+        Pageable pageable = PageRequest.of(page, size, Sort.Direction.ASC, sort);
+
+        if (direction.equalsIgnoreCase("desc")) {
+            pageable = PageRequest.of(page, size, Sort.Direction.DESC, sort);
+        }
+
         Page<Note> notes = noteRepository.findByUserOrderByImportantDesc(user, pageable);
 
         return returnPagedResponse(notes);
     }
 
-    public PagedResponse<NoteResponse> getNotesCreatedByAndTagged(UserPrincipal currentUser, String tag, int page, int size) {
+    public PagedResponse<NoteResponse> getNotesCreatedByAndTagged(UserPrincipal currentUser, String tag, int page, int size, String sort, String direction) {
         validatePageNumberAndSize(page, size);
         String email = currentUser.getEmail();
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
 
-        Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdAt");
+        Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, sort);
+
+        if (direction.equalsIgnoreCase("desc")) {
+            pageable = PageRequest.of(page, size, Sort.Direction.ASC, sort);
+        }
+
         Page<Note> notes = noteRepository.findByUserAndTagOrderByImportantDesc(user, tag, pageable);
 
         return returnPagedResponse(notes);

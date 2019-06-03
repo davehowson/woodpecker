@@ -149,8 +149,8 @@ const Header = (props) => {
                 open={Boolean(anchorEl)}
                 onClose={handleDropClose}
                 getContentAnchorEl={null}
-                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-                transformOrigin={{ vertical: "top", horizontal: "center" }}
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                transformOrigin={{ vertical: "top", horizontal: "right" }}
             >
                 <MenuItem onClick={handleDropClose}>Profile</MenuItem>
                 <MenuItem onClick={handleDropClose}>Logout</MenuItem>
