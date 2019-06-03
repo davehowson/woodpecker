@@ -36,6 +36,11 @@ function deleteNote(noteId) {
     const requestOptions = { method: 'DELETE', headers: authHeader() };
     return fetch(`${process.env.API_URL}/notes/${noteId}`, requestOptions)
         .then(handleResponse)
+        .then(function(response){
+            if (response.success)
+                handleNotification("success", "Note Deleted Successfully")
+            return response.message
+        })
         .catch(function(error){
             handleNotification("error", "Unable to Fetch Notes")
         });

@@ -48,7 +48,7 @@ const AllTasks = (props) => {
     const [tasksOverdue, setTasksOverdue] = useState(null);
     const [tasksCompleted, setTasksCompleted] = useState(null);
     const classes = useStyles();
-    const taskCategories = ["All", "Work", "Other"];
+    const taskCategories = ["All", "Work", "Personal", "Other"];
 
     useEffect(() => {
         let didCancel = false;

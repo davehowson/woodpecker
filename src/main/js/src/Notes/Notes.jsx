@@ -72,8 +72,7 @@ const useStyles = makeStyles(theme => ({
         }
     },
     title: {
-        marginBottom: theme.spacing(1),
-        textAlign: 'center'
+        marginBottom: theme.spacing(1)
     },
     fab: {
         position: 'fixed',
@@ -86,7 +85,7 @@ const useStyles = makeStyles(theme => ({
         marginRight: theme.spacing(1),
         fontSize: 20,
     },
-}))
+}));
 
 const Notes = () => {
     const [notesCategory, setNotesCategory] = useState("all");
@@ -129,7 +128,6 @@ const Notes = () => {
                         <Grid container spacing={4}>
                             <Grid item md={4} sm={12}>
                                 <Grid container>
-
                                     <Grid item xs={12}>
                                         <List className={classes.categories} component="nav" dense disablePadding>
                                             <IconButton
@@ -206,9 +204,9 @@ const Notes = () => {
                                 </Grid>
                             </Grid>
                             <Grid item md={8} sm={12}>
-                                <Grid container>
-                                    <Grid item xs={12} className={classes.title}>
-                                        <Typography componenet="h2" variant="h5">{taskHeader}</Typography>
+                                <Grid container justify="center">
+                                    <Grid item xs={10} className={classes.title}>
+                                        <Typography componenet="h2" variant="h6" color={"primary"}>{taskHeader}</Typography>
                                     </Grid>
                                     <Grid item>
                                         <EditNote

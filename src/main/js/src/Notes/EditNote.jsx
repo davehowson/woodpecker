@@ -8,12 +8,12 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Select from '@material-ui/core/Select';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
-import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
-import Slide from '@material-ui/core/Slide';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 import StarIcon from '@material-ui/icons/Star';
 import {Formik, Field} from 'formik';
@@ -61,7 +61,9 @@ const useStyles = makeStyles(theme => ({
         textAlign: 'right'
     },
     deleteIcon: {
-        marginRight: theme.spacing(1)
+        width: 55,
+        height: 55,
+        marginRight: 0
     },
     helperText: {
         marginTop: theme.spacing(2)
@@ -74,7 +76,8 @@ const EditNote = (props) => {
     const [noteDescription, setNoteDescription] = useState('');
     const [noteTag, setNoteTag] = useState('');
     const [noteImportant, setNoteImportant] = useState(false);
-    const [deleteConfirm, setDeleteConfirm] = useState(false);
+    const [anchorEl, setAnchorEl] = useState(null);
+
 
     useEffect(() => {
         if (props.noteId != null)
@@ -100,21 +103,26 @@ const EditNote = (props) => {
         setNoteDescription('');
         setNoteTag('');
         setNoteImportant(false);
-        props.setTaskHeader("Add Note")
-        props.setNoteId(null)
-    }
+        props.setTaskHeader("Add Note");
+        props.setNoteId(null);
+    };
 
-
-    const handleDeleteClick = () => {
-        props.setReRender(true)
-        setDeleteConfirm(!deleteConfirm);
-    }
 
     const deleteNote = () => {
         noteService.deleteNote(noteId).then(() => {
             handleClear();
+            handleMenuClose();
+            props.setReRender(!props.reRender);
         })
-    }
+    };
+
+    const handleMenuClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+    };
 
     const classes = useStyles();
 
@@ -133,14 +141,19 @@ const EditNote = (props) => {
                     description,
                     tag,
                     important
-                }, {setStatus}) => {
-                    if (tag == '')
-                        tag = null
+                }, {setStatus, resetForm}) => {
+                    if (tag === '')
+                        tag = null;
 
                     setStatus();
                     if (noteId == null) {
                         noteService.create(title, description, tag, important).then(() => {
                             props.setNotesCategory(tag !== null ? tag.toLowerCase() : "all");
+                            handleClear();
+                            resetForm({
+                                title: '',
+                                description: ''
+                            })
                         })
                     } else {
                         noteService.update(noteId, title, description, tag, important).then(() => {
@@ -175,7 +188,7 @@ const EditNote = (props) => {
                                             onChange={handleChange}
                                     />
                                     </Grid>
-                                    <Grid item={true} xs={2} className={classes.importantRow}>
+                                    <Grid item={true} xs={1} className={classes.importantRow}>
                                         <FormControlLabel
                                             control={
                                                 <Checkbox
@@ -191,6 +204,22 @@ const EditNote = (props) => {
                                             }
                                             className={classes.important}
                                           />
+                                    </Grid>
+                                    <Grid item xs={1}>
+                                        <IconButton aria-label="Delete" className={classes.deleteIcon} onClick={handleMenuClick}>
+                                            <MoreVertIcon />
+                                        </IconButton>
+                                        <Menu
+                                            id="menu"
+                                            anchorEl={anchorEl}
+                                            open={Boolean(anchorEl)}
+                                            onClose={handleMenuClose}
+                                            getContentAnchorEl={null}
+                                            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                                            transformOrigin={{ vertical: "top", horizontal: "right" }}
+                                        >
+                                            <MenuItem onClick={deleteNote}>Delete Note</MenuItem>
+                                        </Menu>
                                     </Grid>
                                     <Grid item={true} xs={12}>
                                         <FormControl className={classes.formControl} fullWidth={true}>
@@ -235,18 +264,6 @@ const EditNote = (props) => {
                                                     </Select>
                                                 </FormControl>
                                             </Grid>
-                                            {noteId&&
-                                                <Grid item sm={4}>
-                                                    <IconButton aria-label="Delete" className={classes.deleteIcon} onClick={handleDeleteClick}>
-                                                        <DeleteIcon />
-                                                    </IconButton>
-                                                    <Slide direction="right" in={deleteConfirm} mountOnEnter unmountOnExit>
-                                                        <Button color="primary" onClick={deleteNote}>
-                                                            Delete Note
-                                                        </Button>
-                                                    </Slide>
-                                                </Grid>
-                                            }
                                             <Grid item sm={4} className={classes.saveButtons}>
                                                 <Button color="primary" onClick={handleClear}>
                                                     Cancel
