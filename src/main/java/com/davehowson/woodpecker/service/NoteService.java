@@ -83,9 +83,23 @@ public class NoteService extends ServiceInterface {
         Note note = new Note();
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
+        note.setUser(user);
 
+        return noteRepository.save(persistNote(noteRequest, note));
+    }
+
+    public Note updateNote(NoteUpdateRequest noteUpdateRequest) {
+        Note note = noteRepository.findById(noteUpdateRequest.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Note", "id", noteUpdateRequest.getId()));
+
+        noteRepository.save(persistNote(noteUpdateRequest, note));
+        return note;
+    }
+
+    private Note persistNote(NoteRequest noteRequest, Note note) {
         note.setTitle(noteRequest.getTitle());
         note.setDescription(noteRequest.getDescription());
+        note.setImportant(noteRequest.getImportant());
 
         if (noteRequest.getTag() == null || noteRequest.getTag().isEmpty()) {
             note.setTag(null);
@@ -95,24 +109,6 @@ public class NoteService extends ServiceInterface {
             note.setTag(noteRequest.getTag());
         }
 
-        note.setImportant(noteRequest.getImportant());
-
-        note.setUser(user);
-
-        return noteRepository.save(note);
-    }
-
-    public Note updateNote(NoteUpdateRequest noteUpdateRequest, String email) {
-        Note note = noteRepository.findById(noteUpdateRequest.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Note", "id", noteUpdateRequest.getId()));
-        note.setTitle(noteUpdateRequest.getTitle());
-        note.setDescription(noteUpdateRequest.getDescription());
-        if (!(EnumUtils.isValidEnum(TagName.class, noteUpdateRequest.getTag()))) {
-            throw new AppException("Invalid Tag");
-        } else {
-            note.setTag(noteUpdateRequest.getTag());
-        }
-        noteRepository.save(note);
         return note;
     }
 

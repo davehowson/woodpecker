@@ -72,7 +72,7 @@ public class NoteController {
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> updateNote(@Valid @RequestBody NoteUpdateRequest noteUpdateRequest,
                                         @CurrentUser UserPrincipal currentUser) {
-        Note note = noteService.updateNote(noteUpdateRequest, currentUser.getEmail());
+        Note note = noteService.updateNote(noteUpdateRequest);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{noteId}")
