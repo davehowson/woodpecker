@@ -10,8 +10,10 @@ import Divider from '@material-ui/core/Divider';
 import Tooltip from '@material-ui/core/Tooltip';
 import Button from '@material-ui/core/Button';
 import StarIcon from '@material-ui/icons/Star';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { noteService } from '@/Services';
+import Grid from "@material-ui/core/Grid";
 
 const useStyles = makeStyles(theme => ({
     taskDate: {
@@ -53,6 +55,9 @@ const useStyles = makeStyles(theme => ({
     loadMore: {
         marginTop: theme.spacing(2),
         marginBottom: theme.spacing(2)
+    },
+    loadingGrid: {
+        height: "100%"
     }
 }));
 
@@ -60,6 +65,7 @@ const NotesList = (props) => {
     const [notes, setNotes] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [lastPage, setLastPage] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     const classes = useStyles();
 
@@ -67,6 +73,9 @@ const NotesList = (props) => {
         noteService.getNotesByTag(0, props.notesCategory, props.notesSort, props.notesSortDirection).then(responseNotes => {
             setNotes(responseNotes.content);
             setLastPage(responseNotes.last);
+            setTimeout(function() {
+                setLoading(false);
+            }, 500)
         });
         setCurrentPage(0);
         props.setReRender(false);
@@ -102,47 +111,57 @@ const NotesList = (props) => {
 
     return (
         <React.Fragment>
-            {notes&&
+            {loading ? (
+                <Grid container className={classes.loadingGrid} alignItems="center" justify="center">
+                    <Grid item>
+                        <CircularProgress className={classes.progress} />
+                    </Grid>
+                </Grid>
+            ) : (
                 <React.Fragment>
-                    <List className={classes.list} component="nav">
-                        {notes.map(note =>
-                            <React.Fragment key={note.id}>
-                                <ListItem
-                                    button
-                                    onClick={() => props.setNoteId(note.id)}
-                                    selected={props.noteId === note.id}
-                                >
-                                    <ListItemText
-                                        classes={{
-                                            secondary: classes.listTextSecondary
-                                        }}
-                                        primary={note.title}
-                                        secondary={
-                                            <React.Fragment>
-                                                {note.important&&
+                    {notes&&
+                    <React.Fragment>
+                        <List className={classes.list} component="nav">
+                            {notes.map(note =>
+                                <React.Fragment key={note.id}>
+                                    <ListItem
+                                        button
+                                        onClick={() => props.setNoteId(note.id)}
+                                        selected={props.noteId === note.id}
+                                    >
+                                        <ListItemText
+                                            classes={{
+                                                secondary: classes.listTextSecondary
+                                            }}
+                                            primary={note.title}
+                                            secondary={
+                                                <React.Fragment>
+                                                    {note.important&&
                                                     <StarIcon className={classes.star} />
-                                                }
-                                                <Typography
-                                                    component="span"
-                                                    variant="body2"
-                                                    className={classes.taskDate}
-                                                >
-                                                    {handleDate(note.creationDateTime)}
-                                                </Typography>
-                                                {handleTag(note.tag)}
-                                            </React.Fragment>
-                                        }
-                                    />
-                                </ListItem>
-                                 <Divider component="li" />
-                            </React.Fragment>
-                        )}
-                    </List>
-                    {!lastPage&&
+                                                    }
+                                                    <Typography
+                                                        component="span"
+                                                        variant="body2"
+                                                        className={classes.taskDate}
+                                                    >
+                                                        {handleDate(note.creationDateTime)}
+                                                    </Typography>
+                                                    {handleTag(note.tag)}
+                                                </React.Fragment>
+                                            }
+                                        />
+                                    </ListItem>
+                                    <Divider component="li" />
+                                </React.Fragment>
+                            )}
+                        </List>
+                        {!lastPage&&
                         <Button className={classes.loadMore} variant="outlined" color="primary" onClick={handleLoadMore}>Load More</Button>
+                        }
+                    </React.Fragment>
                     }
                 </React.Fragment>
-            }
+            )}
         </React.Fragment>
     )
 }

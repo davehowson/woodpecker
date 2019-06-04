@@ -53,9 +53,6 @@ const useStyles = makeStyles(theme => ({
         marginTop: theme.spacing(1),
         marginBottom: theme.spacing(4)
     },
-    buttonRow: {
-        marginTop: theme.spacing(2)
-    },
     saveButtons: {
        marginLeft: 'auto',
         textAlign: 'right'
