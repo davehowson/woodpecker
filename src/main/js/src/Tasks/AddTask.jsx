@@ -1,6 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -15,6 +14,7 @@ import {
   TimePicker
 } from '@material-ui/pickers';
 import FormControl from '@material-ui/core/FormControl';
+import OutlinedInput from '@material-ui/core/OutlinedInput';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -22,7 +22,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import { taskService } from '@/Services';
 
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
     addContainer: {
         minHeight: "75vh"
     },
@@ -42,23 +42,18 @@ const styles = theme => ({
     important: {
         marginTop: theme.spacing(2)
     },
-    select: {
-        '&:focus': {
-            backgroundColor: '#fff'
-        }
-    },
     subtitle2: {
         marginTop: theme.spacing(2)
     }
-});
+}));
 
-const AddTaskComponent = (props) => {
+const AddTask = (props) => {
 
-    const {classes} = props;
+    const classes = useStyles();
 
     const handleCancel = () => {
         props.taskFormStatusChanger(false)
-    }
+    };
 
     return (<React.Fragment>
         <Grid container className={classes.addContainer} justify="center" alignItems="center">
@@ -80,19 +75,19 @@ const AddTaskComponent = (props) => {
                             tag
                         }, {setStatus, setSubmitting}) => {
                             setStatus();
-                            if (!(date == null || date == "" || date == undefined)) {
+                            if (!(date == null || date === "" || date === undefined)) {
                                 date = moment(date).format("YYYY-MM-DD");
                             } else {
                                 date = null;
                             }
 
-                            if (!(time == null || time == "" || time == undefined)) {
+                            if (!(time == null || time === "" || time === undefined)) {
                                 time = moment(time).format("HH:mm");
                             } else {
                                 time = null;
                             }
 
-                            taskService.create(description, date, time, tag).then(function(response) {
+                            taskService.create(description, date, time, tag).then(function() {
                                 handleCancel();
                             })
                         }}>
@@ -100,10 +95,8 @@ const AddTaskComponent = (props) => {
                             ({
                                 handleSubmit,
                                 handleChange,
-                                handleBlur,
                                 values,
                                 touched,
-                                isValid,
                                 setFieldValue,
                                 errors
                             }) => (
@@ -116,6 +109,7 @@ const AddTaskComponent = (props) => {
                                                     className={classes.textField}
                                                     name="description"
                                                     label="Description"
+                                                    variant="outlined"
                                                     fullWidth={true}
                                                     helperText={touched.description ? errors.description : ""}
                                                     error={touched.description && Boolean(errors.description)}
@@ -129,6 +123,7 @@ const AddTaskComponent = (props) => {
                                                     value={values.date}
                                                     clearable
                                                     fullWidth
+                                                    inputVariant="outlined"
                                                     format="ll"
                                                     autoOk
                                                     onChange={value => {
@@ -142,6 +137,7 @@ const AddTaskComponent = (props) => {
                                                     value={values.time}
                                                     clearable
                                                     fullWidth
+                                                    inputVariant="outlined"
                                                     autoOk
                                                     format="hh:mm a"
                                                     onChange={value => {
@@ -151,18 +147,12 @@ const AddTaskComponent = (props) => {
                                             </Grid>
 
                                             <Grid item={true} xs={6}>
-                                                <FormControl className={classes.formControl}>
-                                                    <InputLabel htmlFor="tag-simple">Tag*</InputLabel>
+                                                <FormControl variant="outlined" className={classes.formControl}>
+                                                    <InputLabel htmlFor="outlined-tag">Tag*</InputLabel>
                                                     <Select
                                                       value={values.tag}
                                                       onChange={handleChange}
-                                                      inputProps={{
-                                                          name: 'tag',
-                                                          id: 'tag-simple'
-                                                      }}
-                                                      classes={{
-                                                          select: classes.select
-                                                      }}
+                                                      input={<OutlinedInput labelWidth={30} name="tag" id="outlined-tag" />}
                                                     >
                                                       <MenuItem value="">
                                                         <em>None</em>
@@ -197,12 +187,6 @@ const AddTaskComponent = (props) => {
             </Grid>
         </Grid>
     </React.Fragment>)
-}
-
-AddTaskComponent.propTypes = {
-  classes: PropTypes.object.isRequired,
 };
-
-const AddTask = withStyles(styles)(AddTaskComponent);
 
 export { AddTask };
