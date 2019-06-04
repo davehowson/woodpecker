@@ -6,10 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import AddIcon from '@material-ui/icons/Add';
-import Fab from '@material-ui/core/Fab';
+import ListItemText from '@material-ui/core/ListItemText'
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 
@@ -31,6 +28,10 @@ const styles = theme => ({
     addIcon: {
         marginRight: theme.spacing(1),
         fontSize: 20,
+    },
+    header: {
+        textAlign: "center",
+        marginTop: theme.spacing(4)
     }
 })
 
@@ -48,12 +49,12 @@ const BookmarksComponent = (props) => {
 
     const handleAddClick = () => {
         console.log("clicked add")
-    }
+    };
 
     const handleCategory = (category) => {
         setActiveCategory(category);
         setSelectedIndex(category)
-    }
+    };
 
 
     return (
@@ -61,7 +62,7 @@ const BookmarksComponent = (props) => {
             <Helmet>
                 <title>Woodpecker - Bookmarks</title>
             </Helmet>
-            {categories&&
+            {false&&
                 <Grid container spacing={2} >
                     <Grid item sm={3}>
                         <Card className={classes.card}>
@@ -87,9 +88,13 @@ const BookmarksComponent = (props) => {
 
                 </Grid>
             }
-            <Fab color="primary" onClick={handleAddClick} aria-label="Add" className={classes.fab}>
-                <AddIcon />
-            </Fab>
+            <Grid container alignItems="center" justify="center">
+                <Grid item xs={6}>
+                    <Typography variant="h6" component="h2" className={classes.header}>
+                        This feature has not been implemented yet
+                    </Typography>
+                </Grid>
+            </Grid>
         </React.Fragment>
     )
 }

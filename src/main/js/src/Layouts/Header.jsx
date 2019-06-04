@@ -137,17 +137,6 @@ const Header = (props) => {
                     to="/app/notes"
                     value="/app/notes"
                 />
-                <Tab
-                    className={classes.tab}
-                    label="Links"
-                    disableRipple
-                    component={AppBarLink}
-                    classes={{
-                        selected: classes.selected
-                    }}
-                    to="/app/bookmarks"
-                    value="/app/bookmarks"
-                />
             </Tabs>
             <IconButton
               aria-owns={anchorEl ? 'simple-menu' : undefined}
