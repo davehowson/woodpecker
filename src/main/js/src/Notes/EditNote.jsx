@@ -206,20 +206,24 @@ const EditNote = (props) => {
                                           />
                                     </Grid>
                                     <Grid item xs={1}>
-                                        <IconButton aria-label="Delete" className={classes.deleteIcon} onClick={handleMenuClick}>
-                                            <MoreVertIcon />
-                                        </IconButton>
-                                        <Menu
-                                            id="menu"
-                                            anchorEl={anchorEl}
-                                            open={Boolean(anchorEl)}
-                                            onClose={handleMenuClose}
-                                            getContentAnchorEl={null}
-                                            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-                                            transformOrigin={{ vertical: "top", horizontal: "right" }}
-                                        >
-                                            <MenuItem onClick={deleteNote}>Delete Note</MenuItem>
-                                        </Menu>
+                                        {noteId&&
+                                            <React.Fragment>
+                                                <IconButton aria-label="Delete" className={classes.deleteIcon} onClick={handleMenuClick}>
+                                                    <MoreVertIcon />
+                                                </IconButton>
+                                                <Menu
+                                                    id="menu"
+                                                    anchorEl={anchorEl}
+                                                    open={Boolean(anchorEl)}
+                                                    onClose={handleMenuClose}
+                                                    getContentAnchorEl={null}
+                                                    anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                                                    transformOrigin={{ vertical: "top", horizontal: "right" }}
+                                                >
+                                                    <MenuItem onClick={deleteNote}>Delete Note</MenuItem>
+                                                </Menu>
+                                            </React.Fragment>
+                                        }
                                     </Grid>
                                     <Grid item={true} xs={12}>
                                         <FormControl className={classes.formControl} fullWidth={true}>

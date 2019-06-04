@@ -3,13 +3,13 @@ import { NavLink } from 'react-router-dom';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
-import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuIcon from '@material-ui/icons/Menu';
 import { makeStyles } from '@material-ui/styles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import Avatar from '@material-ui/core/Avatar';
 
 import {authenticationService} from '@/Services';
 import {history} from '@/Utilities';
@@ -47,8 +47,12 @@ const useStyles = makeStyles(theme => ({
     selected: {
         backgroundColor: "#f4f4f4"
     },
+    avatarButtonRoot: {
+        padding: theme.spacing(1)
+    },
     userDropdown: {
         marginRight: theme.spacing(2),
+        padding: theme.spacing(1),
         [theme.breakpoints.down('xs')]: {
           marginLeft: "auto",
         },
@@ -58,24 +62,31 @@ const useStyles = makeStyles(theme => ({
 const Header = (props) => {
     const [currentUser, setCurrentUser] = useState(authenticationService.currentUserValue);
     const [anchorEl, setAnchorEl] = useState(null);
-    const [pageValue, setPageValue] = useState(0)
+    const [pageValue, setPageValue] = useState(0);
 
     const logout = () => {
         authenticationService.logout();
         history.push('/login');
-    }
+    };
 
     const handleDropClose = () => {
         setAnchorEl(null)
-    }
+    };
 
     const handleDropOpen = event => {
         setAnchorEl(event.currentTarget)
-    }
+    };
 
     const handlePageChange = (event, newValue) => {
         setPageValue(newValue)
-    }
+    };
+
+    const avatarName = () => {
+        const name = currentUser.name;
+        let initials = name.match(/\b\w/g) || [];
+        initials = ((initials.shift() || '') + (initials.pop() || '')).toUpperCase();
+        return initials;
+    };
 
 
     const classes = useStyles();
@@ -90,6 +101,9 @@ const Header = (props) => {
                 edge="start"
                 onClick={props.handleDrawerToggle}
                 className={classes.menuButton}
+                classes={{
+                    root: classes.avatarButtonRoot
+                }}
             >
                 <MenuIcon />
             </IconButton>
@@ -135,14 +149,14 @@ const Header = (props) => {
                     value="/app/bookmarks"
                 />
             </Tabs>
-            <Button
+            <IconButton
               aria-owns={anchorEl ? 'simple-menu' : undefined}
               aria-haspopup="true"
               onClick={handleDropOpen}
               className={classes.userDropdown}
             >
-                <img src={user}/>
-            </Button>
+                <Avatar className={classes.avatar}>{avatarName()}</Avatar>
+            </IconButton>
             <Menu
                 id="simple-menu"
                 anchorEl={anchorEl}
@@ -152,8 +166,8 @@ const Header = (props) => {
                 anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                 transformOrigin={{ vertical: "top", horizontal: "right" }}
             >
-                <MenuItem onClick={handleDropClose}>Profile</MenuItem>
-                <MenuItem onClick={handleDropClose}>Logout</MenuItem>
+                <MenuItem disabled>{currentUser.name}</MenuItem>
+                <MenuItem onClick={logout}>Logout</MenuItem>
             </Menu>
         </Toolbar>
     </AppBar>)
