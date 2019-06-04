@@ -10,10 +10,10 @@ import { makeStyles } from '@material-ui/styles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Avatar from '@material-ui/core/Avatar';
+import PersonIcon from '@material-ui/icons/AccountCircle';
 
 import {authenticationService} from '@/Services';
 import {history} from '@/Utilities';
-import user from '@/img/user.png';
 import logo from '@/img/woodpecker-header.png';
 
 
@@ -33,6 +33,7 @@ const useStyles = makeStyles(theme => ({
     navButtons: {
         marginLeft: "auto",
         marginRight: theme.spacing(2),
+
         [theme.breakpoints.down('xs')]: {
           display: 'none',
         },
@@ -45,17 +46,26 @@ const useStyles = makeStyles(theme => ({
         padding: theme.spacing(0, 5)
     },
     selected: {
-        backgroundColor: "#f4f4f4"
+        backgroundColor: "#f4f4f4",
+        color: theme.palette.primary.dark,
     },
     avatarButtonRoot: {
         padding: theme.spacing(1)
     },
+    avatar: {
+        backgroundColor: '#fff',
+        color: theme.palette.primary.dark
+    },
     userDropdown: {
-        marginRight: theme.spacing(2),
+        marginLeft: theme.spacing(2),
         padding: theme.spacing(1),
         [theme.breakpoints.down('xs')]: {
           marginLeft: "auto",
         },
+    },
+    iconRoot: {
+        width: '1.9em',
+        height: '1.9em'
     }
 }));
 
@@ -110,7 +120,6 @@ const Header = (props) => {
             <img src={logo} className={classes.headerLogo}/>
             <Tabs
                 className={classes.navButtons}
-                textColor="primary"
                 value={history.location.pathname}
                 onChange={handlePageChange}
                 indicatorColor="primary"
@@ -144,7 +153,7 @@ const Header = (props) => {
               onClick={handleDropOpen}
               className={classes.userDropdown}
             >
-                <Avatar className={classes.avatar}>{avatarName()}</Avatar>
+                <Avatar className={classes.avatar}><PersonIcon classes={{root: classes.iconRoot}} /></Avatar>
             </IconButton>
             <Menu
                 id="simple-menu"

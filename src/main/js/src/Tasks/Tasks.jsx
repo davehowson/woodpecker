@@ -19,7 +19,8 @@ const useStyles = makeStyles(theme => ({
         minHeight: '80vh',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        marginTop: theme.spacing(2)
     },
     fab: {
         position: 'fixed',
@@ -56,8 +57,8 @@ const useStyles = makeStyles(theme => ({
         color: theme.palette.secondary.dark,
         backgroundColor: "#fff !important"
     },
-    addButton: {
-        marginTop: theme.spacing(10)
+    taskNavContainer: {
+        height: '100%'
     }
 
 }));
@@ -127,7 +128,7 @@ const Tasks = () => {
                                             <TaskList tasks={tasksCompleted} taskNav="completed" expanded={false}/>
                                         </Grid>
                                         <Grid item md={3} xs={12}>
-                                            <Grid container justify="flex-end">
+                                            <Grid container justify="flex-end" alignItems="center" className={classes.taskNavContainer}>
                                                 <Grid item xs={8}>
                                                     <List className={classes.categories} component="nav">
                                                         {taskCategories.map(item =>

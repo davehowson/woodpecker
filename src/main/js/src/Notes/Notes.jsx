@@ -16,7 +16,8 @@ import { Menu, MenuItem, IconButton} from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
     card: {
-        minHeight: '80vh'
+        minHeight: '80vh',
+        marginTop: theme.spacing(2)
     },
     categories: {
         display: "flex",
