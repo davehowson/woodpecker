@@ -2,6 +2,7 @@ const merge = require('webpack-merge');
 const common = require('./webpack.common.js');
 const webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = merge(common, {
     output: {
@@ -21,5 +22,6 @@ module.exports = merge(common, {
         new HtmlWebpackPlugin({
           template: './dev-server/index.html'
         }),
+        // new BundleAnalyzerPlugin()
     ],
 });

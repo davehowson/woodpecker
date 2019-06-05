@@ -49,6 +49,7 @@ module.exports = {
     plugins: [
         new webpack.EnvironmentPlugin({
             API_URL: 'http://localhost:5000/api'
-        })
+        }),
+        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
     ]
 };

@@ -10,9 +10,11 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
 import SortIcon from '@material-ui/icons/Sort';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import IconButton from '@material-ui/core/IconButton';
 
 import { NotesList, EditNote } from '@/Notes';
-import { Menu, MenuItem, IconButton} from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
     card: {

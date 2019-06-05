@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import classNames from 'classnames';
 import moment from 'moment';
+import Grid from "@material-ui/core/Grid";
 import Typography from '@material-ui/core/Typography';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -13,7 +14,7 @@ import StarIcon from '@material-ui/icons/Star';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { useGetNotes } from '@/Services';
-import Grid from "@material-ui/core/Grid";
+
 
 
 const useStyles = makeStyles(theme => ({
