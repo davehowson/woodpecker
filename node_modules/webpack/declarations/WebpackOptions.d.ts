@@ -22,6 +22,8 @@ export type EntryDynamic = () => EntryStatic | Promise<EntryStatic>;
  */
 export type EntryStatic = EntryObject | EntryItem;
 /**
+ * A non-empty array of non-empty strings
+ *
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "NonEmptyArrayOfUniqueStringValues".
  */
@@ -369,7 +371,14 @@ export interface WebpackOptions {
 	stats?:
 		| StatsOptions
 		| boolean
-		| ("none" | "errors-only" | "minimal" | "normal" | "detailed" | "verbose");
+		| (
+				| "none"
+				| "errors-only"
+				| "minimal"
+				| "normal"
+				| "detailed"
+				| "verbose"
+				| "errors-warnings");
 	/**
 	 * Environment to build for
 	 */
@@ -381,7 +390,8 @@ export interface WebpackOptions {
 				| "async-node"
 				| "node-webkit"
 				| "electron-main"
-				| "electron-renderer")
+				| "electron-renderer"
+				| "electron-preload")
 		| ((compiler: import("../lib/Compiler")) => void);
 	/**
 	 * Enter watch mode, which rebuilds on file change.
@@ -1054,7 +1064,7 @@ export interface OutputOptions {
 	 */
 	filename?: string | Function;
 	/**
-	 * Use the future version of asset emitting logic, which is allows freeing memory of assets after emitting. It could break plugins which assume that assets are still readable after emitting. Will be the new default in the next major version.
+	 * Use the future version of asset emitting logic, which allows freeing memory of assets after emitting. It could break plugins which assume that assets are still readable after emitting. Will be the new default in the next major version.
 	 */
 	futureEmitAssets?: boolean;
 	/**

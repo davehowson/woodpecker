@@ -1954,6 +1954,9 @@ class Parser extends Tapable {
 			case "RestElement":
 				this.enterRestElement(pattern, onIdent);
 				break;
+			case "Property":
+				this.enterPattern(pattern.value, onIdent);
+				break;
 		}
 	}
 
@@ -1968,7 +1971,7 @@ class Parser extends Tapable {
 			propIndex++
 		) {
 			const prop = pattern.properties[propIndex];
-			this.enterPattern(prop.value, onIdent);
+			this.enterPattern(prop, onIdent);
 		}
 	}
 
@@ -2238,6 +2241,8 @@ class Parser extends Tapable {
 
 		if (type === "auto") {
 			parserOptions.sourceType = "module";
+		} else if (parserOptions.sourceType === "script") {
+			parserOptions.allowReturnOutsideFunction = true;
 		}
 
 		let ast;
@@ -2252,6 +2257,7 @@ class Parser extends Tapable {
 
 		if (threw && type === "auto") {
 			parserOptions.sourceType = "script";
+			parserOptions.allowReturnOutsideFunction = true;
 			if (Array.isArray(parserOptions.onComment)) {
 				parserOptions.onComment.length = 0;
 			}
