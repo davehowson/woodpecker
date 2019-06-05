@@ -69,3 +69,9 @@ typings
 
 #ESLint
 .eslintrc.json
+
+# Webpack Dev Server
+dev-server
+img
+
+**/bundle.js.gz
