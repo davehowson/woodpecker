@@ -6,7 +6,6 @@ import { Tasks } from '@/Tasks';
 import { Notes } from '@/Notes';
 import { Bookmarks } from '@/Bookmarks';
 import { Header, Sidebar } from '@/Layouts'
-import { fontAwesomeLibrary } from '@/Utilities';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -21,11 +20,11 @@ const useStyles = makeStyles(theme => ({
 
 const App= (props) => {
     const [drawerOpen, setDrawerOpen] = useState(false);
-    fontAwesomeLibrary();
 
     const handleDrawerToggle = () => {
         setDrawerOpen(!drawerOpen)
-    }
+    };
+
     const classes = useStyles();
 
     return (
