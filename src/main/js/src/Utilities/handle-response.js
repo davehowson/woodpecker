@@ -1,20 +1,29 @@
 import { authenticationService } from '@/Services';
-import { handleNotification } from '@/Utilities';
+import { useSnackbar } from 'notistack';
 
 
-export function handleResponse(response) {
-    return response.text().then(text => {
-        const data = text && JSON.parse(text);
-        if (!response.ok) {
-            if ([401, 403].indexOf(response.status) !== -1) {
-                authenticationService.logout();
-                handleNotification("error", "User Unauthorized");
+export function useHandleResponse() {
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
+    const handleResponse = (response) => {
+        return response.text().then(text => {
+            const data = text && JSON.parse(text);
+            if (!response.ok) {
+                if ([401, 403].indexOf(response.status) !== -1) {
+                    authenticationService.logout();
+                    enqueueSnackbar("User Unauthorized", {
+                        variant: 'error'
+                    });
+                }
+
+                const error = (data && data.message) || response.statusText;
+                return Promise.reject(error);
             }
 
-            const error = (data && data.message) || response.statusText;
-            return Promise.reject(error);
-        }
+            return data;
+        });
+    }
 
-        return data;
-    });
+    return handleResponse;
+
 }

@@ -21,7 +21,7 @@ import * as Yup from 'yup';
 import ReactQuill from 'react-quill';
 
 
-import {noteService} from '@/Services';
+import { useManageNote } from '@/Services';
 
 const useStyles = makeStyles(theme => ({
     modalTitle: {
@@ -74,11 +74,12 @@ const EditNote = (props) => {
     const [noteTag, setNoteTag] = useState('');
     const [noteImportant, setNoteImportant] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
+    const [getNote, deleteNote, create, update] = useManageNote();
 
 
     useEffect(() => {
         if (props.noteId != null)
-            noteService.getNote(props.noteId).then(note => {
+            getNote(props.noteId).then(note => {
                 setNoteId(note.id);
                 setNoteTitle(note.title);
                 setNoteDescription(note.description);
@@ -105,8 +106,8 @@ const EditNote = (props) => {
     };
 
 
-    const deleteNote = () => {
-        noteService.deleteNote(noteId).then(() => {
+    const handleDeleteNote = () => {
+        deleteNote(noteId).then(() => {
             handleClear();
             handleMenuClose();
             props.setReRender(!props.reRender);
@@ -144,7 +145,7 @@ const EditNote = (props) => {
 
                     setStatus();
                     if (noteId == null) {
-                        noteService.create(title, description, tag, important).then(() => {
+                        create(title, description, tag, important).then(() => {
                             props.setNotesCategory(tag !== null ? tag.toLowerCase() : "all");
                             handleClear();
                             resetForm({
@@ -153,7 +154,7 @@ const EditNote = (props) => {
                             })
                         })
                     } else {
-                        noteService.update(noteId, title, description, tag, important).then(() => {
+                        update(noteId, title, description, tag, important).then(() => {
                             props.setNotesCategory(tag !== null ? tag.toLowerCase() : "all");
                         })
 
@@ -217,7 +218,7 @@ const EditNote = (props) => {
                                                     anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                                                     transformOrigin={{ vertical: "top", horizontal: "right" }}
                                                 >
-                                                    <MenuItem onClick={deleteNote}>Delete Note</MenuItem>
+                                                    <MenuItem onClick={handleDeleteNote}>Delete Note</MenuItem>
                                                 </Menu>
                                             </React.Fragment>
                                         }

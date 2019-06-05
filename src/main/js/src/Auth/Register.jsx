@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { Helmet } from 'react-helmet';
 import PropTypes from 'prop-types';
 
 import withStyles from '@material-ui/core/styles/withStyles';
 import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Link from '@material-ui/core/Link';
 
-import { authenticationService } from '@/Services';
+import { authenticationService, useRegister } from '@/Services';
 
 import '@/Auth/Auth.css';
 
@@ -53,11 +51,13 @@ const styles = theme => ({
 
 const RegisterComponent = (props) => {
 
+    const register = useRegister();
+
     useEffect(() => {
         if (authenticationService.currentUserValue) {
             props.history.push('/app/tasks');
         }
-    });
+    }, []);
 
     const { classes } = props;
 
@@ -77,15 +77,15 @@ const RegisterComponent = (props) => {
                    validationSchema={Yup.object().shape({
                        name: Yup.string().required('Name is required').max(40,'Too Long!'),
                        email: Yup.string().email('Invalid email address').required('Email is required').max(40, 'Email address too long'),
-                       password: Yup.string().required('Password is Required').max(100, 'Password too long'),
+                       password: Yup.string().required('Password is Required').max(100, 'Password too long').min(6, 'Password should be at least 6 characters long'),
                        passwordConfirm: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords do not match')
                    })}
                    onSubmit={({ name, email, password }, { setStatus, setSubmitting }) => {
                        setStatus();
-                       authenticationService.register(name, email, password)
+                       register(name, email, password)
                        .then(
                            user => {
-                               const { from } = props.location.state || { from: { pathname: "/app" } };
+                               const { from } = props.location.state || { from: { pathname: "/app/tasks" } };
                                props.history.push(from);
                            },
                            error => {

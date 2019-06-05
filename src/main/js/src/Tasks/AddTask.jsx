@@ -19,7 +19,7 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 
-import { taskService } from '@/Services';
+import { useCreateTask } from '@/Services';
 
 
 const useStyles = makeStyles(theme => ({
@@ -49,6 +49,8 @@ const useStyles = makeStyles(theme => ({
 
 const AddTask = (props) => {
 
+    const create = useCreateTask();
+
     const classes = useStyles();
 
     const handleCancel = () => {
@@ -73,7 +75,7 @@ const AddTask = (props) => {
                             date,
                             time,
                             tag
-                        }, {setStatus, setSubmitting}) => {
+                        }, {setStatus}) => {
                             setStatus();
                             if (!(date == null || date === "" || date === undefined)) {
                                 date = moment(date).format("YYYY-MM-DD");
@@ -87,7 +89,7 @@ const AddTask = (props) => {
                                 time = null;
                             }
 
-                            taskService.create(description, date, time, tag).then(function() {
+                            create(description, date, time, tag).then(function() {
                                 handleCancel();
                             })
                         }}>

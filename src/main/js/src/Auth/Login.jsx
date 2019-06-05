@@ -1,18 +1,16 @@
 import React, {useEffect} from 'react';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
-import {Link as RouterLink} from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import withStyles from '@material-ui/core/styles/withStyles';
 import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Link from '@material-ui/core/Link';
 
-import {authenticationService} from '@/Services';
+import { useLogin, authenticationService } from '@/Services';
 
 
 const styles = theme => ({
@@ -51,11 +49,13 @@ const styles = theme => ({
 
 const LoginComponent = (props) => {
 
+    const login = useLogin();
+
     useEffect(() => {
         if (authenticationService.currentUserValue) {
             props.history.push('/app/tasks');
         }
-    })
+    });
 
     const { classes } = props;
 
@@ -70,15 +70,15 @@ const LoginComponent = (props) => {
                        password: ''
                    }} validationSchema={Yup.object().shape({
                        email: Yup.string().email('Invalid email address').required('Email is required').max(40, 'Email is too long'),
-                       password: Yup.string().required('Password is required').max(100, 'Password is too long')
+                       password: Yup.string().required('Password is required').max(100, 'Password is too long').min(6, 'Password too short'),
                    })} onSubmit={({
                        email,
                        password
                    }, {setStatus, setSubmitting}) => {
                        setStatus();
-                       authenticationService.login(email, password)
+                       login(email, password)
                        .then(
-                           user => {
+                           () => {
                                const { from } = props.location.state || { from: { pathname: "/app" } };
                                props.history.push(from);
                            },
@@ -94,7 +94,6 @@ const LoginComponent = (props) => {
                            handleChange,
                            values,
                            touched,
-                           isValid,
                            errors
                        }) => (
                            <form onSubmit={handleSubmit} className={classes.form}>

@@ -7,11 +7,9 @@ import TableRow from '@material-ui/core/TableRow';
 import Checkbox from '@material-ui/core/Checkbox';
 import PanoramaFishEye from '@material-ui/icons/PanoramaFishEye';
 import CheckCircle from '@material-ui/icons/CheckCircle';
-import Icon from '@material-ui/core/Icon';
 import Tooltip from '@material-ui/core/Tooltip';
 
-import { taskService } from '@/Services';
-import { handleNotification } from '@/Utilities';
+import { useCompleteTask } from '@/Services';
 
 const useStyles = makeStyles(theme => ({
     tableRow: {
@@ -65,6 +63,7 @@ const TaskRow = (props) => {
 
     const [isChecked, setIsChecked] = useState(props.task.complete);
     const [rowClass, setRowClass] = useState('');
+    const completeTask = useCompleteTask();
 
     const classes = useStyles();
 
@@ -80,21 +79,19 @@ const TaskRow = (props) => {
         setIsChecked(e.target.checked)
         if (e.target.checked) {
             setRowClass(classes.completedDescription);
-            handleNotification("success", "Task Marked Complete");
         } else {
             setRowClass('');
-            handleNotification("warning", "Task Marked Incomplete");
         }
 
         let data = {"taskId": props.task.id, "status": !isChecked};
 
-        taskService.completeTask(data);
-    }
+        completeTask(data);
+    };
 
     const capitalize = (s) => {
         if (typeof s !== 'string') return '';
         return s.charAt(0).toUpperCase() + s.slice(1);
-    }
+    };
 
 
     const handleTag = () => {

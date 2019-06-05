@@ -11,7 +11,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Button from "@material-ui/core/Button";
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import { taskService } from '@/Services';
+import { useGetTasks } from '@/Services';
 import { AddTask, TaskList } from '@/Tasks';
 
 const useStyles = makeStyles(theme => ({
@@ -71,12 +71,13 @@ const Tasks = () => {
     const [tasksOverdue, setTasksOverdue] = useState(null);
     const [tasksCompleted, setTasksCompleted] = useState(null);
     const [loading, setLoading] = useState(true);
+    const getTasks = useGetTasks();
 
 
     const taskCategories = ["All", "Work", "Personal", "Other"];
 
     useEffect(() => {
-        taskService.getTasks(taskCategory).then(tasks => {
+        getTasks(taskCategory).then(tasks => {
             setTasksToday(tasks.today);
             setTasksUpcoming(tasks.upcoming);
             setTasksOverdue(tasks.overdue);
@@ -121,13 +122,13 @@ const Tasks = () => {
                                     </Grid>
                                 ) : (
                                     <Grid container spacing={3}>
-                                        <Grid item md={9} xs={12} className={classes.taskRow}>
+                                        <Grid item sm={12} md={9} className={classes.taskRow}>
                                             <TaskList tasks={tasksToday} taskNav="today" expanded={true}/>
                                             <TaskList tasks={tasksUpcoming} taskNav="upcoming" expanded={true}/>
                                             <TaskList tasks={tasksOverdue} taskNav="overdue" expanded={false}/>
                                             <TaskList tasks={tasksCompleted} taskNav="completed" expanded={false}/>
                                         </Grid>
-                                        <Grid item md={3} xs={12}>
+                                        <Grid item sm={12} md={3}>
                                             <Grid container justify="flex-end" alignItems="center" className={classes.taskNavContainer}>
                                                 <Grid item xs={8}>
                                                     <List className={classes.categories} component="nav">

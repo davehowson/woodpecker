@@ -1,55 +1,71 @@
 import { BehaviorSubject } from 'rxjs';
+import { useSnackbar } from 'notistack';
 
-import { handleResponse } from '@/Utilities';
+import { useHandleResponse } from '@/Utilities';
 
 const currentUserSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('currentUser')));
 
 export const authenticationService = {
-    login,
-    register,
     logout,
     currentUser: currentUserSubject.asObservable(),
     get currentUserValue () { return currentUserSubject.value }
 };
 
-function login(email, password) {
-    const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
+export function useLogin() {
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+    const handleResponse = useHandleResponse();
+
+    const login = (email, password) => {
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        };
+
+        return fetch(`${process.env.API_URL}/auth/login`, requestOptions)
+            .then(handleResponse)
+            .then(user => {
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                currentUserSubject.next(user);
+                return user;
+            })
+            .catch(function() {
+                enqueueSnackbar("Failed to Login", {
+                    variant: 'error'
+                })
+            })
     };
 
-    return fetch(`${process.env.API_URL}/auth/login`, requestOptions)
-        .then(handleResponse)
-        .then(user => {
-            localStorage.setItem('currentUser', JSON.stringify(user));
-            currentUserSubject.next(user);
-
-            return user;
-        })
-        .catch(function(error) {
-            console.log(error);
-        })
+    return login;
 }
 
-function register(name, email, password) {
-    const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password })
-    };
+export function useRegister() {
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+    const handleResponse = useHandleResponse();
 
-    return fetch(`${process.env.API_URL}/auth/register`, requestOptions)
-        .then(handleResponse)
-        .then(user => {
-            localStorage.setItem('currentUser', JSON.stringify(user));
-            currentUserSubject.next(user);
+    const register = (name, email, password) => {
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, password })
+        };
 
-            return user;
-        })
-        .catch(function(error) {
-            console.log(error);
-        })
+        return fetch(`${process.env.API_URL}/auth/register`, requestOptions)
+            .then(handleResponse)
+            .then(user => {
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                currentUserSubject.next(user);
+
+                return user;
+            })
+            .catch(function() {
+                enqueueSnackbar("Failed to Register", {
+                    variant: 'error'
+                })
+            })
+    }
+
+    return register
 }
 
 function logout() {

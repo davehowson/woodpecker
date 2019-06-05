@@ -12,8 +12,9 @@ import Button from '@material-ui/core/Button';
 import StarIcon from '@material-ui/icons/Star';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import { noteService } from '@/Services';
+import { useGetNotes } from '@/Services';
 import Grid from "@material-ui/core/Grid";
+
 
 const useStyles = makeStyles(theme => ({
     taskDate: {
@@ -66,11 +67,12 @@ const NotesList = (props) => {
     const [currentPage, setCurrentPage] = useState(0);
     const [lastPage, setLastPage] = useState(false);
     const [loading, setLoading] = useState(true);
+    const getNotes = useGetNotes();
 
     const classes = useStyles();
 
     useEffect(() => {
-        noteService.getNotesByTag(0, props.notesCategory, props.notesSort, props.notesSortDirection).then(responseNotes => {
+		getNotes(0, props.notesCategory, props.notesSort, props.notesSortDirection).then(responseNotes => {
             setNotes(responseNotes.content);
             setLastPage(responseNotes.last);
             setTimeout(function() {
@@ -83,7 +85,7 @@ const NotesList = (props) => {
 
     const handleLoadMore = () => {
         let current = currentPage + 1
-        noteService.getNotesByTag(current, props.notesCategory, props.notesSort, props.notesSortDirection).then(responseNotes => {
+        getNotes(current, props.notesCategory, props.notesSort, props.notesSortDirection).then(responseNotes => {
             setNotes(n => n.concat(responseNotes.content));
             setLastPage(responseNotes.last);
         });

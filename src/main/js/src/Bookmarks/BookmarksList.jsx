@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -9,18 +8,20 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 
 
-import { bookmarkService } from '@/Services';
+import { useGetBookmarks } from '@/Services';
 
 const styles = theme => ({
 })
 
 const BookmarksListComponent = (props) => {
     const [bookmarks, setBookmarks] = useState(null);
+
+    const getBookmarks = useGetBookmarks();
     const { classes } = props;
 
     useEffect(() => {
         if (props.category != null) {
-            bookmarkService.getBookmarks(props.category).then(bookmarks => {
+            getBookmarks(props.category).then(bookmarks => {
                 setBookmarks(bookmarks.content);
             })
         }

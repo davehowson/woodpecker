@@ -8,9 +8,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import TextField from "@material-ui/core/TextField";
-import FormLabel from '@material-ui/core/FormLabel';
 import FormControl from '@material-ui/core/FormControl';
-import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Select from '@material-ui/core/Select';
@@ -24,7 +22,7 @@ import {Formik, Field} from 'formik';
 import * as Yup from 'yup';
 import ReactQuill from 'react-quill';
 
-import {noteService} from '@/Services';
+import { useGetBookmarks } from '@/Services';
 
 const styles = theme => ({
     modalTitle: {
@@ -67,6 +65,7 @@ const BookmarkComponent = (props) => {
     const [bookmarkUrl, setBookmarkUrl] = useState('');
     const [bookmarkCategory, setBookmarkCategory] = useState('');
     const [deleteConfirm, setDeleteConfirm] = useState(false);
+    const getBookmark = useGetBookmarks();
 
     useEffect(() => {
         if (props.bookmarkId != null)

@@ -11,7 +11,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 
 
-import { bookmarkService } from '@/Services';
+import { useGetCategories } from '@/Services';
 import { BookmarksList } from '@/Bookmarks';
 
 const styles = theme => ({
@@ -39,10 +39,11 @@ const BookmarksComponent = (props) => {
     const [categories, setCategories] = useState(null);
     const [activeCategory, setActiveCategory] = useState(null);
     const [selectedIndex, setSelectedIndex] = useState(null);
+    const getCategories = useGetCategories();
     const { classes } = props;
 
     useEffect(() => {
-        bookmarkService.getCategories().then(categories => {
+        getCategories().then(categories => {
             setCategories(categories.content);
         })
     }, []);

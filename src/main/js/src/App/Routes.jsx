@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Router, Route } from 'react-router-dom';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
+import { SnackbarProvider } from 'notistack';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
 import { authenticationService } from '@/Services';
@@ -54,12 +55,14 @@ const Routes = () => {
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
-            <Router history={history}>
-                <Route path="/" exact component={Home} />
-                <Route path="/login" component={Login} />
-                <Route path="/register" component={Register} />
-                <PrivateRoute path="/app" component={App} />
-            </Router>
+            <SnackbarProvider maxSnack={3} autoHideDuration={3000}>
+                <Router history={history}>
+                    <Route path="/" exact component={Home} />
+                    <Route path="/login" component={Login} />
+                    <Route path="/register" component={Register} />
+                    <PrivateRoute path="/app" component={App} />
+                </Router>
+            </SnackbarProvider>
         </ThemeProvider>
     )
 }
