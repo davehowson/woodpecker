@@ -42,6 +42,9 @@ const useStyles = makeStyles(theme => ({
         left: 5,
         position: 'absolute',
         color: 'white'
+    },
+    disclaimer: {
+        marginTop: theme.spacing(2)
     }
 }));
 
@@ -72,6 +75,9 @@ const Home = () => {
                         Woodpecker is a Productivity Application that helps you organize
                         your tasks and notes in one place. No need to switch between mutliple
                         applications to manage your work, Woodpecker’s got your back.
+                    </Typography>
+                    <Typography variant="subtitle" component="p" align="center" color="primary" className={classes.disclaimer}>
+                        **This application is functional, yet still under development**
                     </Typography>
                 </Grid>
                 <Grid item xs={9} className={classes.row}>

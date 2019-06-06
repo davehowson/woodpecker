@@ -23,6 +23,9 @@ const useStyles = makeStyles(theme => ({
     button: {
         margin: theme.spacing(3, 0, 2),
     },
+    disclaimer: {
+        marginTop: theme.spacing(2)
+    }
 
 
 }));
@@ -117,6 +120,9 @@ const LoginComponent = (props) => {
                     <Link onClick={() => props.handleClick('register')} href="#">
                         Don't have an account?
                     </Link>
+                </Typography>
+                <Typography variant="subtitle" component="p" align="center" color="secondary" className={classes.disclaimer}>
+                    Use <em>john@example.com</em> : <em>password</em>  for testing purposes
                 </Typography>
             </Grid>
         </React.Fragment>
