@@ -33,12 +33,16 @@ const useStyles = makeStyles(theme => ({
        alignItems: 'center',
        justifyContent: 'center',
        height: '100%'
-   },
-   paperRoot: {
+    },
+    paperRoot: {
        backgroundColor: 'rgba(255, 255, 255, 0.96)'
-   }
-
-
+    },
+    credit: {
+        bottom: 0,
+        left: 5,
+        position: 'absolute',
+        color: 'white'
+    }
 }));
 
 const Home = () => {
@@ -84,7 +88,11 @@ const Home = () => {
 
     return (
             <Grid container className={classes.root}>
-                <Grid item xs={false} sm={4} md={6}/>
+                <Grid item xs={false} sm={4} md={6}>
+                    <Typography variant="caption" className={classes.credit}>
+                        Image courtesy of Unsplash
+                    </Typography>
+                </Grid>
                 <Grid item xs={12} sm={8} md={6} component={Paper} classes={{root:classes.paperRoot}}  elevation={6} square>
                     <div className={classes.paper}>
                         <Grid container alignItems="center" justify="center" spacing={2}>
