@@ -22,22 +22,23 @@ const useStyles = makeStyles(theme => ({
         justifyContent: 'center',
         marginTop: theme.spacing(2)
     },
-    fab: {
-        position: 'fixed',
-        bottom: 20,
-        right: 20,
-        top: 'auto',
-        left: 'auto',
+    cardContent: {
+        width: '100%'
     },
-    addIcon: {
-        marginRight: theme.spacing(1),
-        fontSize: 20,
+    container: {
+        [theme.breakpoints.down('md')]: {
+            flexDirection: 'column-reverse'
+        }
     },
     taskRow: {
+        padding: theme.spacing(2),
         [theme.breakpoints.up('md')]: {
             maxHeight: '74vh',
             minHeight: '70vh',
             overflow: 'auto'
+        },
+        [theme.breakpoints.down('sm')]: {
+            padding: theme.spacing(1, 0)
         }
     },
     heading: {
@@ -47,6 +48,16 @@ const useStyles = makeStyles(theme => ({
     category: {
         textAlign: 'right',
         cursor: 'pointer',
+        [theme.breakpoints.down('md')]: {
+            textAlign: 'center'
+        }
+    },
+    categories: {
+        display: 'flex',
+        flexDirection: 'column',
+        [theme.breakpoints.down('md')]: {
+            flexDirection: 'row',
+        }
     },
     categoryText: {
         fontSize: theme.typography.pxToRem(15),
@@ -57,8 +68,15 @@ const useStyles = makeStyles(theme => ({
         color: theme.palette.secondary.dark,
         backgroundColor: "#fff !important"
     },
+    taskAddRow: {
+        textAlign: 'center'
+    },
     taskNavContainer: {
-        height: '100%'
+        height: '100%',
+        flexDirection: 'row',
+        [theme.breakpoints.down('md')]: {
+            flexDirection: 'column-reverse',
+        }
     }
 
 }));
@@ -108,29 +126,29 @@ const Tasks = () => {
                 <title>Woodpecker - Tasks</title>
             </Helmet>
             <Container>
-                <Card className={classes.card}>
-                    <CardContent>
+                <Card className={classes.card} >
+                    <CardContent className={classes.cardContent}>
                         {taskForm ? (
                             <AddTask taskFormStatusChanger={taskFormStatusChanger}/>
                         ) : (
                             <React.Fragment>
                                 {loading ? (
-                                    <Grid container>
+                                    <Grid container justify="center" alignItems="center">
                                         <Grid item>
                                             <CircularProgress className={classes.progress} />
                                         </Grid>
                                     </Grid>
                                 ) : (
-                                    <Grid container spacing={3}>
-                                        <Grid item sm={12} md={9} className={classes.taskRow}>
+                                    <Grid container  className={classes.container}>
+                                        <Grid item md={12} lg={9} className={classes.taskRow}>
                                             <TaskList tasks={tasksToday} taskNav="today" expanded={true}/>
                                             <TaskList tasks={tasksUpcoming} taskNav="upcoming" expanded={true}/>
                                             <TaskList tasks={tasksOverdue} taskNav="overdue" expanded={false}/>
                                             <TaskList tasks={tasksCompleted} taskNav="completed" expanded={false}/>
                                         </Grid>
-                                        <Grid item sm={12} md={3}>
+                                        <Grid item md={12} lg={3}>
                                             <Grid container justify="flex-end" alignItems="center" className={classes.taskNavContainer}>
-                                                <Grid item xs={8}>
+                                                <Grid item xs={12} >
                                                     <List className={classes.categories} component="nav">
                                                         {taskCategories.map(item =>
                                                             <ListItem
@@ -148,7 +166,7 @@ const Tasks = () => {
                                                         )}
                                                     </List>
                                                 </Grid>
-                                                <Grid item xs={8}>
+                                                <Grid item xs={12}  className={classes.taskAddRow}>
                                                     <Button variant="contained" color="primary" className={classes.addButton} onClick={() => handleAddTask()}>Add New Task</Button>
                                                 </Grid>
                                             </Grid>

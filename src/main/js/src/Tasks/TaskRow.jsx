@@ -20,7 +20,11 @@ const useStyles = makeStyles(theme => ({
         }
     },
     tableCell: {
-        borderBottom: 'none'
+        borderBottom: 'none',
+        [theme.breakpoints.down('sm')]: {
+            fontSize: theme.typography.pxToRem(12),
+        }
+
     },
     star: {
         verticalAlign: "middle",

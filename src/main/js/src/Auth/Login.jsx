@@ -79,7 +79,7 @@ const LoginComponent = (props) => {
                        login(email, password)
                        .then(
                            () => {
-                               const { from } = props.location.state || { from: { pathname: "/app" } };
+                               const { from } = props.location.state || { from: { pathname: "/app/tasks" } };
                                props.history.push(from);
                            },
                            error => {

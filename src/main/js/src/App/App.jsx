@@ -15,6 +15,13 @@ const useStyles = makeStyles(theme => ({
     content: {
         flexGrow: 1,
         padding: theme.spacing(2),
+        minHeight: '90vh',
+        display: 'flex',
+        alignItems: 'center',
+        marginTop: 67,
+        [theme.breakpoints.down('sm')]: {
+            padding: theme.spacing(0),
+        }
     }
 }))
 

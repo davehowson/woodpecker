@@ -46,6 +46,11 @@ const useStyles = makeStyles(theme => ({
             margin: theme.spacing(1, 0)
         },
 
+    },
+    expansionPanelDetails : {
+        [theme.breakpoints.down('sm')]: {
+            padding: theme.spacing(1, 0)
+        }
     }
 }));
 

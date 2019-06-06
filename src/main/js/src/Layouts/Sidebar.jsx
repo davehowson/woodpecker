@@ -60,12 +60,6 @@ const Sidebar = (props) => {
                 </ListItemIcon>
                 <ListItemText primary="Notes"/>
             </ListItem>
-            <ListItem className={classes.sidebarListItem} button={true} disableRipple={true} key="Bookmarks" component={SidebarLink} to="/app/bookmarks">
-                <ListItemIcon>
-                    <BookmarksIcon/>
-                </ListItemIcon>
-                <ListItemText primary="Bookmarks"/>
-            </ListItem>
         </List>
     )
 
