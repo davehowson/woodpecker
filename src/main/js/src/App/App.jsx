@@ -38,13 +38,6 @@ const App= (props) => {
             <Route
                 render={({location}) =>(
                     <div className={classes.root}>
-                        <Helmet>
-                                {/*<style type="text/css">{`
-                                    html {
-                                        overflow-y: scroll;
-                                    }
-                                `}</style>*/}
-                        </Helmet>
                         <Header drawerOpen={drawerOpen} handleDrawerToggle={handleDrawerToggle}/>
                         <Sidebar drawerOpen={drawerOpen} handleDrawerToggle={handleDrawerToggle}/>
                         <main className={classes.content}>
