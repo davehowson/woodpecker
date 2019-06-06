@@ -76,7 +76,7 @@ const Home = () => {
                         your tasks and notes in one place. No need to switch between mutliple
                         applications to manage your work, Woodpecker’s got your back.
                     </Typography>
-                    <Typography variant="subtitle" component="p" align="center" color="primary" className={classes.disclaimer}>
+                    <Typography variant="subtitle2" component="p" align="center" color="primary" className={classes.disclaimer}>
                         **This application is functional, yet still under development**
                     </Typography>
                 </Grid>

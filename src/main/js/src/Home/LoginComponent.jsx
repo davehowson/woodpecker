@@ -121,7 +121,7 @@ const LoginComponent = (props) => {
                         Don't have an account?
                     </Link>
                 </Typography>
-                <Typography variant="subtitle" component="p" align="center" color="secondary" className={classes.disclaimer}>
+                <Typography variant="subtitle2" component="p" align="center" color="secondary" className={classes.disclaimer}>
                     Use <em>john@example.com</em> : <em>password</em>  for testing purposes
                 </Typography>
             </Grid>
