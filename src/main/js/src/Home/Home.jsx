@@ -1,18 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import { Link } from 'react-router-dom';
 import Paper from '@material-ui/core/Paper';
+
 import logo from '@/img/woodpecker-logo.png';
-import bg from '@/img/unsplash.jpg';
+import { LoginComponent, RegisterComponent } from '@/Home';
 
 const useStyles = makeStyles(theme => ({
     root: {
-        backgroundColor: '#fff',
+        backgroundColor: '#740403',
         height: '100vh',
-        background: `url(https://source.unsplash.com/lpqgCtnyhjw/1366x768/)`,
+        background: `url(https://source.unsplash.com/collection/4944965/1366x768/)`,
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
         textAlign: 'center'
     },
     button: {
-        margin: theme.spacing()
+        margin: theme.spacing(1, 0.5)
     },
     paper: {
        margin: theme.spacing(0, 4),
@@ -42,7 +42,45 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Home = () => {
+    const [page, setPage] = useState('home');
+
     const classes = useStyles();
+
+    const handleClick = (location) => {
+        setPage(location)
+    }
+
+    let CustomComponent;
+
+    if (page === 'login') {
+        CustomComponent = <LoginComponent handleClick={handleClick}/>
+
+    } else if (page === 'register') {
+        CustomComponent = <RegisterComponent handleClick={handleClick} />
+    } else {
+        CustomComponent =
+            <React.Fragment>
+                <Grid item xs={9} className={classes.row}>
+                    <img src={logo} className={classes.logo}/>
+                </Grid>
+                <Grid item xs={9} className={classes.row}>
+                    <Typography variant="body1" align="center">
+                        Woodpecker is a Productivity Application that helps you organize
+                        your tasks and notes in one place. No need to switch between mutliple
+                        applications to manage your work, Woodpecker’s got your back.
+                    </Typography>
+                </Grid>
+                <Grid item xs={9} className={classes.row}>
+                    <Button variant="contained" color="primary" className={classes.button} onClick={() => handleClick('login')} >
+                        LOGIN
+                    </Button>
+                    <Button variant="contained" color="primary" className={classes.button} onClick={() => handleClick('register')} >
+                        REGISTER
+                    </Button>
+                </Grid>
+            </React.Fragment>
+
+    }
 
     return (
             <Grid container className={classes.root}>
@@ -50,24 +88,7 @@ const Home = () => {
                 <Grid item xs={12} sm={8} md={6} component={Paper} classes={{root:classes.paperRoot}}  elevation={6} square>
                     <div className={classes.paper}>
                         <Grid container alignItems="center" justify="center" spacing={2}>
-                            <Grid item xs={9} className={classes.row}>
-                                <img src={logo} className={classes.logo}/>
-                            </Grid>
-                            <Grid item xs={9} className={classes.row}>
-                                <Typography variant="body1" align="center">
-                                    Woodpecker is a Productivity Application that helps you organize
-                                    your tasks and notes in one place. No need to switch between mutliple
-                                    applications to manage your work, Woodpecker’s got your back.
-                                </Typography>
-                            </Grid>
-                            <Grid item xs={9} className={classes.row}>
-                                <Button variant="outlined" color="primary" className={classes.button} component={Link} to="/login">
-                                    LOGIN
-                                </Button>
-                                <Button variant="outlined" color="primary" className={classes.button} component={Link} to="/register">
-                                    REGISTER
-                                </Button>
-                            </Grid>
+                            {CustomComponent}
                         </Grid>
                     </div>
                 </Grid>

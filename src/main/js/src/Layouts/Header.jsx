@@ -76,7 +76,7 @@ const Header = (props) => {
 
     const logout = () => {
         authenticationService.logout();
-        history.push('/login');
+        history.push('/');
     };
 
     const handleDropClose = () => {

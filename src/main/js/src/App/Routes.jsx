@@ -8,7 +8,6 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { authenticationService } from '@/Services';
 import { history, PrivateRoute } from '@/Utilities';
 import { Home } from '@/Home';
-import { Login, Register } from '@/Auth';
 import { App } from '@/App';
 
 import '@/App/App.scss'
@@ -58,8 +57,6 @@ const Routes = () => {
             <SnackbarProvider maxSnack={3} autoHideDuration={3000}>
                 <Router history={history}>
                     <Route path="/" exact component={Home} />
-                    <Route path="/login" component={Login} />
-                    <Route path="/register" component={Register} />
                     <PrivateRoute path="/app" component={App} />
                 </Router>
             </SnackbarProvider>
