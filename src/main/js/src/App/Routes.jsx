@@ -10,7 +10,7 @@ import { history, PrivateRoute } from '@/Utilities';
 import { Home } from '@/Home';
 import { App } from '@/App';
 
-import '@/App/App.scss'
+import '@/App/App.scss';
 
 const Routes = () => {
     const [currentUser, setCurrentUser] = useState(null);
@@ -20,35 +20,35 @@ const Routes = () => {
     });
 
     const theme = createMuiTheme({
-      palette: {
-        primary: {
-              light: '#ff5131',
-              main: '#d50000',
-              dark: '#9b0000'
+        palette: {
+            primary: {
+                light: '#ff5131',
+                main: '#d50000',
+                dark: '#9b0000',
+            },
+            secondary: {
+                light: '#4ebaaa',
+                main: '#00897b',
+                dark: '#005b4f',
+                contrastText: '#FFF',
+            },
+            background: {
+                default: '#ffffff',
+            },
         },
-        secondary: {
-              light: '#4ebaaa',
-              main: '#00897b',
-              dark: '#005b4f',
-              contrastText: '#FFF',
+        status: {
+            danger: 'orange',
         },
-        background: {
-            default: '#f0f0f0'
-        }
-      },
-      status: {
-        danger: 'orange',
-      },
-      typography: {
-          useNextVariants: true
-      },
-      overrides: {
-          MuiPaper: {
-              elevation1: {
-                  boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)'
-              }
-          }
-      }
+        typography: {
+            useNextVariants: true,
+        },
+        overrides: {
+            MuiPaper: {
+                elevation1: {
+                    boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+                },
+            },
+        },
     });
 
     return (
@@ -61,7 +61,7 @@ const Routes = () => {
                 </Router>
             </SnackbarProvider>
         </ThemeProvider>
-    )
-}
+    );
+};
 
 export { Routes };

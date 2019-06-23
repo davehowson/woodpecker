@@ -75,13 +75,13 @@ public class DatabaseSeeder {
     private void seedTaskList(User user) {
         faker = new Faker();
         LocalDate date = LocalDate.now();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 100; i++) {
             Task task = new Task();
-            task.setDescription(faker.harryPotter().quote());
+            task.setDescription(faker.chuckNorris().fact());
             task.setTag(getTag());
             task.setUser(user);
             task.setDate(date.plusDays(i));
-            LocalTime localTime = faker.date().future(5, TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalTime();
+            LocalTime localTime = faker.date().future(40, TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalTime();
             task.setTime(localTime);
             task.setComplete(new Random().nextBoolean());
             taskRepository.save(task);

@@ -26,6 +26,7 @@
     "notistack": "^0.8.5",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
+    "react-custom-scrollbars": "^4.2.1",
     "react-day-picker": "^7.3.0",
     "react-dom": "^16.8.6",
     "react-helmet": "^5.2.1",
