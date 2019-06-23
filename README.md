@@ -3,8 +3,19 @@
 
 Woodpecker was built as an attempt to learn Spring Boot & React JS. I've always wanted to use a web based application
 that could manage tasks and notes in the same place but I could not find such an application available on the internet.
-So I decided to build Woodpecker. This application is a long way from being complete, but it is a usable product 
-at its current stage
+So I decided to build Woodpecker. This application is a long way from being complete, nevertheless, it is a usable product 
+at its current stage.
+
+![Landing Page](https://i.imgur.com/Sa04npN.png)
+Landing Page - Woodpecker
+
+![Notes](https://i.imgur.com/OhRttcZ.png)
+Notes Page - Woodpecker
+
+![Tasks](https://i.imgur.com/7lxKlTy.png)
+Tasks Page - Woodpecker
+
+
 
 #### Frontend
 
