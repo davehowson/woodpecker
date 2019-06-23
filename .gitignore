@@ -72,7 +72,6 @@ typings
 
 # Webpack Dev Server
 dev-server
-img
 
 **/bundle.js.gz
 
