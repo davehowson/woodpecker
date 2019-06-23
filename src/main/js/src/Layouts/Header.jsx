@@ -65,10 +65,11 @@ const useStyles = makeStyles(theme => ({
     },
     avatar: {
         color: theme.palette.secondary.main,
+        backgroundColor: theme.palette.primary.main,
     },
     iconRoot: {
-        width: '1.9em',
-        height: '1.9em',
+        width: '1.5em',
+        height: '1.5em',
     },
 }));
 

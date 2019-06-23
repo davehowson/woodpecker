@@ -201,21 +201,6 @@ const Sidebar = props => {
                         <ListItem
                             button
                             className={classes.listItem}
-                            selected={props.tasksScope === 'inbox'}
-                            onClick={() => handleScope('inbox')}
-                            classes={{ selected: classes.selected }}
-                            key={'inbox'}
-                        >
-                            <ListItemText
-                                classes={{
-                                    primary: classes.categoryText,
-                                }}
-                                primary={'Inbox'}
-                            />
-                        </ListItem>
-                        <ListItem
-                            button
-                            className={classes.listItem}
                             selected={props.tasksScope === 'today'}
                             onClick={() => handleScope('today')}
                             classes={{ selected: classes.selected }}
@@ -256,6 +241,21 @@ const Sidebar = props => {
                                     primary: classes.categoryText,
                                 }}
                                 primary={'Overdue'}
+                            />
+                        </ListItem>
+                        <ListItem
+                            button
+                            className={classes.listItem}
+                            selected={props.tasksScope === 'completed'}
+                            onClick={() => handleScope('completed')}
+                            classes={{ selected: classes.selected }}
+                            key={'completed'}
+                        >
+                            <ListItemText
+                                classes={{
+                                    primary: classes.categoryText,
+                                }}
+                                primary={'Completed'}
                             />
                         </ListItem>
                     </List>

@@ -4,31 +4,21 @@ import { makeStyles } from '@material-ui/styles';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import { Scrollbars } from 'react-custom-scrollbars';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import Button from '@material-ui/core/Button';
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
 
 import { useGetTasks } from '@/Services';
 import { AddTask, TaskList } from '@/Tasks';
 
 const useStyles = makeStyles(theme => ({
-    card: {
-        minHeight: '80vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginTop: theme.spacing(2),
-    },
-    cardContent: {
-        width: '100%',
-    },
     taskRow: {
-        padding: theme.spacing(2),
+        padding: theme.spacing(2, 2, 0),
         [theme.breakpoints.up('md')]: {
-            maxHeight: '74vh',
-            minHeight: '70vh',
+            height: '80vh !important',
             overflow: 'auto',
         },
         [theme.breakpoints.down('sm')]: {
@@ -37,7 +27,13 @@ const useStyles = makeStyles(theme => ({
     },
     heading: {
         fontSize: theme.typography.pxToRem(15),
-        fontWeight: theme.typography.fontWeightRegular,
+        fontWeight: theme.typography.fontWeightMedium,
+    },
+    divider: {
+        width: '95%',
+        margin: theme.spacing(1, 0, 0),
+        boxShadow:
+            '0px 3px 5px -1px rgba(0,0,0,0.2), 0px 5px 8px 0px rgba(0,0,0,0.14), 0px 1px 14px 0px rgba(0,0,0,0.12)',
     },
     category: {
         textAlign: 'center',
@@ -71,6 +67,12 @@ const useStyles = makeStyles(theme => ({
             flexDirection: 'column-reverse',
         },
     },
+    fab: {
+        margin: theme.spacing(1),
+        position: 'absolute',
+        bottom: theme.spacing(3),
+        right: theme.spacing(3),
+    },
 }));
 
 const Tasks = props => {
@@ -81,7 +83,7 @@ const Tasks = props => {
 
     useEffect(() => {
         getTasks(props.category, props.tasksScope).then(tasks => {
-            setTasks(tasks.today);
+            setTasks(tasks);
             setTimeout(function() {
                 setLoading(false);
             }, 500);
@@ -96,6 +98,18 @@ const Tasks = props => {
 
     const handleAddTask = () => {
         taskFormStatusChanger(true);
+    };
+
+    const titleToUpper = () => {
+        if (typeof props.tasksScope !== 'string') return '';
+        return (
+            props.tasksScope.charAt(0).toUpperCase() + props.tasksScope.slice(1)
+        );
+    };
+
+    const taskCount = () => {
+        if (tasks !== undefined || tasks != null) return tasks.length;
+        return 0;
     };
 
     return (
@@ -122,7 +136,16 @@ const Tasks = props => {
                             </Grid>
                         ) : (
                             <Grid container justify="center">
-                                <Grid item md={12} lg={9}>
+                                <Grid item lg={10}>
+                                    <Typography
+                                        className={classes.heading}
+                                        component="h2"
+                                    >
+                                        {titleToUpper()} ({taskCount()})
+                                    </Typography>
+                                    <Divider className={classes.divider} />
+                                </Grid>
+                                <Grid item md={12} lg={10}>
                                     <Scrollbars className={classes.taskRow}>
                                         <TaskList
                                             tasks={tasks}
@@ -136,6 +159,14 @@ const Tasks = props => {
                     </React.Fragment>
                 )}
             </Container>
+            <Fab
+                color="primary"
+                aria-label="Add"
+                className={classes.fab}
+                onClick={handleAddTask}
+            >
+                {taskForm ? <ChevronLeftIcon /> : <AddIcon />}
+            </Fab>
         </React.Fragment>
     );
 };

@@ -89,24 +89,33 @@ public class TaskService extends ServiceInterface {
                 .map(ModelMapper::mapTaskToTaskResponse).collect(Collectors.toList());
     }
 
-    public Map<String, List<TaskResponse>> getTasks(UserPrincipal currentUser, String tag) {
+    public List<TaskResponse> getTasks(UserPrincipal currentUser, String category, String scope) {
         LocalDate date = LocalDate.now();
+        List<TaskResponse> resp = null;
 
-        Map<String, List<TaskResponse>> resp = new HashMap<>();
-        resp.put("today", getTaskListOnDate(currentUser, date, tag));
-
-        LocalDate start = LocalDate.now().plusDays(1);
-        LocalDate end = LocalDate.now().plusDays(15);
-        resp.put("upcoming", getTaskListUpcoming(currentUser, start, end, tag));
-
-        resp.put("overdue", getTaskListOverdue(currentUser, date, tag));
-
-        LocalDate startComp = LocalDate.now().minusDays(7);
-        LocalDate endComp = LocalDate.now().plusDays(7);
-
-        resp.put("completed", getTaskListCompleted(currentUser, startComp, endComp, tag));
+        switch (scope) {
+            case "today":
+                resp = getTaskListOnDate(currentUser, date, category);
+                break;
+            case "upcoming":
+                LocalDate start = LocalDate.now().plusDays(1);
+                LocalDate end = LocalDate.now().plusDays(15);
+                resp = getTaskListUpcoming(currentUser, start, end, category);
+                break;
+            case "overdue":
+                resp = getTaskListOverdue(currentUser, date, category);
+                break;
+            case "completed":
+                LocalDate startComp = LocalDate.now().minusDays(7);
+                LocalDate endComp = LocalDate.now().plusDays(7);
+                resp = getTaskListCompleted(currentUser, startComp, endComp, category);
+                break;
+            default:
+                return null;
+        }
 
         return resp;
+
     }
 
     public Task createTask(TaskRequest taskRequest, String email) {

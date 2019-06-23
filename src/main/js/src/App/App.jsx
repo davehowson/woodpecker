@@ -73,7 +73,7 @@ const App = props => {
                                     />
                                 )}
                             />
-                            <Route path={'/app/notes'} component={Notes} />
+                            <Route path={'/app/notes'} render={props => (<Notes {...props} category={category}/>)} />
                             <Route
                                 path={'/app/bookmarks'}
                                 component={Bookmarks}

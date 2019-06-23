@@ -146,7 +146,6 @@ const EditNote = (props) => {
                     setStatus();
                     if (noteId == null) {
                         create(title, description, tag, important).then(() => {
-                            props.setNotesCategory(tag !== null ? tag.toLowerCase() : "all");
                             handleClear();
                             resetForm({
                                 title: '',
@@ -154,9 +153,7 @@ const EditNote = (props) => {
                             })
                         })
                     } else {
-                        update(noteId, title, description, tag, important).then(() => {
-                            props.setNotesCategory(tag !== null ? tag.toLowerCase() : "all");
-                        })
+                        update(noteId, title, description, tag, important);
 
                     }
 

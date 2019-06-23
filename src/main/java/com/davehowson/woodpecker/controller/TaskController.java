@@ -36,9 +36,10 @@ public class TaskController {
 
     @GetMapping
     @PreAuthorize("hasRole('USER')")
-    public Map<String, List<TaskResponse>> getTasks(@CurrentUser UserPrincipal currentUser,
+    public List<TaskResponse> getTasks(@CurrentUser UserPrincipal currentUser,
+                                                    @RequestParam String category,
                                                     @RequestParam String scope) {
-        return taskService.getTasks(currentUser, scope);
+        return taskService.getTasks(currentUser, category, scope);
     }
 
 
