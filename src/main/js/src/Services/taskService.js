@@ -1,60 +1,64 @@
 import { authHeader, useHandleResponse } from '@/Utilities';
 import { useSnackbar } from 'notistack';
 
-
 export function useGetTasks() {
-
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const handleResponse = useHandleResponse();
 
-    const getTasks = (scope) => {
+    const getTasks = (category, scope) => {
         const requestOptions = { method: 'GET', headers: authHeader() };
-        return fetch(`${process.env.API_URL}/tasks?scope=${scope}`, requestOptions)
+        return fetch(
+            `${process.env.API_URL}/tasks?category=${category}&scope=${scope}`,
+            requestOptions
+        )
             .then(handleResponse)
-            .catch(function(error){
-                enqueueSnackbar("Unable to Fetch Tasks", {
-                    variant: 'error'
+            .catch(function(error) {
+                enqueueSnackbar('Unable to Fetch Tasks', {
+                    variant: 'error',
                 });
             });
-
     };
 
     return getTasks;
 }
 
 export function useCompleteTask() {
-
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const handleResponse = useHandleResponse();
 
-    const completeTask = (data) => {
-        const requestOptions = { method: 'POST', headers: authHeader(), body: JSON.stringify(data) };
-        return fetch(`${process.env.API_URL}/tasks/task/complete`, requestOptions)
+    const completeTask = data => {
+        const requestOptions = {
+            method: 'POST',
+            headers: authHeader(),
+            body: JSON.stringify(data),
+        };
+        return fetch(
+            `${process.env.API_URL}/tasks/task/complete`,
+            requestOptions
+        )
             .then(handleResponse)
-            .then((response) => {
+            .then(response => {
                 if (response.status) {
-                    enqueueSnackbar("Task Marked Complete", {
-                        variant: 'success'
-                    })
+                    enqueueSnackbar('Task Marked Complete', {
+                        variant: 'success',
+                    });
                 } else {
-                    enqueueSnackbar("Task Marked Incomplete", {
-                        variant: 'info'
-                    })
+                    enqueueSnackbar('Task Marked Incomplete', {
+                        variant: 'info',
+                    });
                 }
             })
-            .catch(function(){
-                enqueueSnackbar("Unable to Complete Tasks", {
-                    variant: 'error'
-                })
+            .catch(function() {
+                enqueueSnackbar('Unable to Complete Tasks', {
+                    variant: 'error',
+                });
             });
     };
 
     return completeTask;
 }
 
-
 export function useCreateTask() {
-
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const handleResponse = useHandleResponse();
 
@@ -62,23 +66,23 @@ export function useCreateTask() {
         const requestOptions = {
             method: 'POST',
             headers: authHeader(),
-            body: JSON.stringify({ description, date, time, tag, important })
+            body: JSON.stringify({ description, date, time, tag, important }),
         };
 
         return fetch(`${process.env.API_URL}/tasks`, requestOptions)
             .then(handleResponse)
-            .then(function(response){
+            .then(function(response) {
                 if (response.success)
-                    enqueueSnackbar("Task Created Successfully", {
-                        variant: 'success'
+                    enqueueSnackbar('Task Created Successfully', {
+                        variant: 'success',
                     });
-                return response.message
+                return response.message;
             })
             .catch(function(error) {
-                enqueueSnackbar("Unable to Create Task", {
-                    variant: 'error'
-                })
-            })
+                enqueueSnackbar('Unable to Create Task', {
+                    variant: 'error',
+                });
+            });
     };
 
     return create;

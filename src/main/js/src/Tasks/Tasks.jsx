@@ -24,11 +24,6 @@ const useStyles = makeStyles(theme => ({
     cardContent: {
         width: '100%',
     },
-    container: {
-        [theme.breakpoints.down('md')]: {
-            flexDirection: 'column-reverse',
-        },
-    },
     taskRow: {
         padding: theme.spacing(2),
         [theme.breakpoints.up('md')]: {
@@ -78,38 +73,25 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const Tasks = () => {
+const Tasks = props => {
     const [taskForm, setTaskForm] = useState(false);
-    const [taskCategory, setTaskCategory] = useState('all');
-    const [tasksToday, setTasksToday] = useState(null);
-    const [tasksUpcoming, setTasksUpcoming] = useState(null);
-    const [tasksOverdue, setTasksOverdue] = useState(null);
-    const [tasksCompleted, setTasksCompleted] = useState(null);
+    const [tasks, setTasks] = useState(null);
     const [loading, setLoading] = useState(true);
     const getTasks = useGetTasks();
 
-    const taskCategories = ['All', 'Work', 'Personal', 'Other'];
-
     useEffect(() => {
-        getTasks(taskCategory).then(tasks => {
-            setTasksToday(tasks.today);
-            setTasksUpcoming(tasks.upcoming);
-            setTasksOverdue(tasks.overdue);
-            setTasksCompleted(tasks.completed);
+        getTasks(props.category, props.tasksScope).then(tasks => {
+            setTasks(tasks.today);
             setTimeout(function() {
                 setLoading(false);
             }, 500);
         });
-    }, [taskCategory, taskForm]);
+    }, [props.category, props.tasksScope, taskForm]);
 
     const classes = useStyles();
 
     const taskFormStatusChanger = () => {
         setTaskForm(!taskForm);
-    };
-
-    const handleCategory = category => {
-        setTaskCategory(category);
     };
 
     const handleAddTask = () => {
@@ -139,88 +121,13 @@ const Tasks = () => {
                                 </Grid>
                             </Grid>
                         ) : (
-                            <Grid container className={classes.container}>
-                                <Grid item md={12} lg={3}>
-                                    <Grid
-                                        container
-                                        justify="flex-end"
-                                        alignItems="center"
-                                        className={classes.taskNavContainer}
-                                    >
-                                        <Grid item xs={12}>
-                                            <List
-                                                className={classes.categories}
-                                                component="nav"
-                                            >
-                                                {taskCategories.map(item => (
-                                                    <ListItem
-                                                        button
-                                                        className={
-                                                            classes.category
-                                                        }
-                                                        selected={
-                                                            taskCategory ===
-                                                            item.toLowerCase()
-                                                        }
-                                                        onClick={() =>
-                                                            handleCategory(
-                                                                item.toLowerCase()
-                                                            )
-                                                        }
-                                                        key={item}
-                                                        classes={{
-                                                            selected:
-                                                                classes.selectedCategory,
-                                                        }}
-                                                    >
-                                                        <ListItemText
-                                                            classes={{
-                                                                primary:
-                                                                    classes.categoryText,
-                                                            }}
-                                                            primary={item}
-                                                        />
-                                                    </ListItem>
-                                                ))}
-                                            </List>
-                                        </Grid>
-                                        <Grid
-                                            item
-                                            xs={12}
-                                            className={classes.taskAddRow}
-                                        >
-                                            <Button
-                                                variant="outlined"
-                                                color="primary"
-                                                className={classes.addButton}
-                                                onClick={() => handleAddTask()}
-                                            >
-                                                Add New Task
-                                            </Button>
-                                        </Grid>
-                                    </Grid>
-                                </Grid>
+                            <Grid container justify="center">
                                 <Grid item md={12} lg={9}>
                                     <Scrollbars className={classes.taskRow}>
                                         <TaskList
-                                            tasks={tasksToday}
-                                            taskNav="today"
+                                            tasks={tasks}
+                                            taskNav={props.tasksScope}
                                             expanded={true}
-                                        />
-                                        <TaskList
-                                            tasks={tasksUpcoming}
-                                            taskNav="upcoming"
-                                            expanded={true}
-                                        />
-                                        <TaskList
-                                            tasks={tasksOverdue}
-                                            taskNav="overdue"
-                                            expanded={false}
-                                        />
-                                        <TaskList
-                                            tasks={tasksCompleted}
-                                            taskNav="completed"
-                                            expanded={false}
                                         />
                                     </Scrollbars>
                                 </Grid>

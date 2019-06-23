@@ -27,9 +27,9 @@ const Routes = () => {
                 dark: '#9b0000',
             },
             secondary: {
-                light: '#4ebaaa',
-                main: '#00897b',
-                dark: '#005b4f',
+                light: '#6d6d6d',
+                main: '#424242',
+                dark: '#1b1b1b',
                 contrastText: '#FFF',
             },
             background: {

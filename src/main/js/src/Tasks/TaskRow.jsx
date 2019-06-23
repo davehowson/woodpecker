@@ -37,9 +37,6 @@ const useStyles = makeStyles(theme => ({
         color: '#6b6b6b',
         fontSize: theme.typography.pxToRem(13),
     },
-    dotimportant: {
-        backgroundColor: '#df021e',
-    },
     dotwork: {
         backgroundColor: '#fff171',
     },

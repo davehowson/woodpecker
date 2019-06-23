@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
-import Helmet from 'react-helmet';
 import { makeStyles } from '@material-ui/styles';
 import { Tasks } from '@/Tasks';
 import { Notes } from '@/Notes';
@@ -27,6 +26,10 @@ const useStyles = makeStyles(theme => ({
 
 const App = props => {
     const [drawerOpen, setDrawerOpen] = useState(false);
+    const [category, setCategory] = useState('all');
+    const [tasksScope, setTasksScope] = useState('today');
+
+    const drawerWidth = 240;
 
     const handleDrawerToggle = () => {
         setDrawerOpen(!drawerOpen);
@@ -36,15 +39,21 @@ const App = props => {
 
     return (
         <Route
-            render={({ location }) => (
+            render={() => (
                 <div className={classes.root}>
                     <Header
                         drawerOpen={drawerOpen}
                         handleDrawerToggle={handleDrawerToggle}
+                        drawerWidth={drawerWidth}
                     />
                     <Sidebar
                         drawerOpen={drawerOpen}
                         handleDrawerToggle={handleDrawerToggle}
+                        drawerWidth={drawerWidth}
+                        category={category}
+                        setCategory={setCategory}
+                        tasksScope={tasksScope}
+                        setTasksScope={setTasksScope}
                     />
                     <main className={classes.content}>
                         <div className={classes.appBarSpacer} />
@@ -54,7 +63,16 @@ const App = props => {
                                 path={'/app'}
                                 render={() => <Redirect to="/app/tasks" />}
                             />
-                            <Route path={'/app/tasks'} component={Tasks} />
+                            <Route
+                                path={'/app/tasks'}
+                                render={props => (
+                                    <Tasks
+                                        {...props}
+                                        category={category}
+                                        tasksScope={tasksScope}
+                                    />
+                                )}
+                            />
                             <Route path={'/app/notes'} component={Notes} />
                             <Route
                                 path={'/app/bookmarks'}
