@@ -6,17 +6,6 @@ that could manage tasks and notes in the same place but I could not find such an
 So I decided to build Woodpecker. This application is a long way from being complete, nevertheless, it is a usable product 
 at its current stage.
 
-![Landing Page](https://i.imgur.com/Sa04npN.png)
-Landing Page - Woodpecker
-
-![Notes](https://i.imgur.com/OhRttcZ.png)
-Notes Page - Woodpecker
-
-![Tasks](https://i.imgur.com/7lxKlTy.png)
-Tasks Page - Woodpecker
-
-
-
 #### Frontend
 
 The frontend was built with React JS and the UI framework [Material UI](https://material.io/) was used to maintain UI consistency,
@@ -35,6 +24,14 @@ Authentication is handled using JSON Tokens and user principals are stored using
 The backend was developed using Spring Boot which majorly simplified the process of creating a fully fledged backend with 
 authentication, note management and task management functionality. The frontend communicates with this using an API and every
 aspect of this backend is handled using Spring Boot.
+
+#### Screenshots
+
+![Landing Page](http://i64.tinypic.com/s2dvsh.jpg)
+
+![Tasks](http://i65.tinypic.com/28tub1c.jpg)
+
+![Notes](http://i68.tinypic.com/2hz0d3l.jpg)
 
 
 ## TODO
