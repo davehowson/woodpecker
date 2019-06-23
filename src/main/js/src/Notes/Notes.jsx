@@ -35,11 +35,8 @@ const useStyles = makeStyles(theme => ({
     },
     listRow: {
         textAlign: 'center',
-        [theme.breakpoints.up('md')]: {
-            height: '65vh',
-            overflow: 'auto',
-            borderRadius: 5,
-        },
+        height: '65vh',
+        overflow: 'auto',
     },
     title: {
         marginBottom: theme.spacing(1),
@@ -90,7 +87,7 @@ const Notes = props => {
             </Helmet>
             <Container>
                 <Grid container spacing={4}>
-                    <Grid item md={4} sm={12}>
+                    <Grid item md={4} xs={12}>
                         <Grid container>
                             <Grid item xs={12}>
                                 <IconButton

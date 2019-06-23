@@ -16,6 +16,9 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { useGetNotes } from '@/Services';
 
 const useStyles = makeStyles(theme => ({
+    list: {
+        marginRight: theme.spacing(2),
+    },
     taskDate: {
         margin: theme.spacing(1, 1, 1, 0),
         fontSize: theme.typography.pxToRem(12),
@@ -145,7 +148,7 @@ const NotesList = props => {
                 <React.Fragment>
                     {notes && (
                         <React.Fragment>
-                            <List className={classes.list} component="nav">
+                            <List className={classes.list}>
                                 {notes.map(note => (
                                     <React.Fragment key={note.id}>
                                         <ListItem

@@ -2,6 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { makeStyles } from '@material-ui/styles';
 import classnames from 'classnames';
+import Hidden from '@material-ui/core/Hidden';
 import Drawer from '@material-ui/core/Drawer';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -38,17 +39,6 @@ const useStyles = makeStyles(theme => ({
         }),
         zIndex: theme.zIndex.appBar - 1,
     }),
-    drawerPaperClose: {
-        overflowX: 'hidden',
-        transition: theme.transitions.create('width', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-        }),
-        width: theme.spacing(7),
-        [theme.breakpoints.up('sm')]: {
-            width: theme.spacing(9),
-        },
-    },
     appBarSpacer: theme.mixins.toolbar,
     logoDiv: {
         textAlign: 'center',
@@ -109,158 +99,177 @@ const Sidebar = props => {
         props.setTasksScope(scope);
     };
 
-    return (
-        <nav>
-            <Drawer
-                variant="permanent"
-                classes={{
-                    paper: classnames(
-                        classes.drawerPaper,
-                        !open && classes.drawerPaperClose
-                    ),
-                }}
-                PaperProps={{
-                    elevation: 6,
-                }}
+    const drawer = (
+        <div>
+            <div className={classes.logoDiv}>
+                <img src={logo} className={classes.logo} />
+            </div>
+            <Divider />
+            <List
+                className={classes.list}
+                subheader={
+                    <ListSubheader
+                        component="div"
+                        id="nested-list-subheader"
+                        className={classes.subheader}
+                    >
+                        {history.location.pathname === '/app/tasks'
+                            ? 'Task Categories'
+                            : 'Note Categories'}
+                    </ListSubheader>
+                }
             >
-                <div className={classes.logoDiv}>
-                    <img src={logo} className={classes.logo} />
-                </div>
-                <Divider />
-                <List
-                    className={classes.list}
-                    subheader={
-                        <ListSubheader
-                            component="div"
-                            id="nested-list-subheader"
-                            className={classes.subheader}
-                        >
-                            {history.location.pathname === '/app/tasks'
-                                ? 'Task Categories'
-                                : 'Note Categories'}
-                        </ListSubheader>
-                    }
+                <ListItem
+                    button
+                    className={classes.listItem}
+                    selected={props.category === 'all'}
+                    onClick={() => handleCategory('all')}
+                    classes={{ selected: classes.selectedAll }}
+                    key={'All'}
                 >
-                    <ListItem
-                        button
-                        className={classes.listItem}
-                        selected={props.category === 'all'}
-                        onClick={() => handleCategory('all')}
-                        classes={{ selected: classes.selectedAll }}
-                        key={'All'}
-                    >
-                        <ListItemIcon className={classes.icon}>
-                            <BorderAllIcon />
-                        </ListItemIcon>
-                        <ListItemText primary={'All'} />
-                    </ListItem>
-                    <ListItem
-                        button
-                        className={classes.listItem}
-                        selected={props.category === 'work'}
-                        onClick={() => handleCategory('work')}
-                        classes={{ selected: classes.selectedWork }}
-                        key={'Work'}
-                    >
-                        <ListItemIcon className={classes.icon}>
-                            <WorkIcon />
-                        </ListItemIcon>
-                        <ListItemText primary={'Work'} />
-                    </ListItem>
-                    <ListItem
-                        button
-                        className={classes.listItem}
-                        selected={props.category === 'personal'}
-                        onClick={() => handleCategory('personal')}
-                        classes={{ selected: classes.selectedPersonal }}
-                        key={'Personal'}
-                    >
-                        <ListItemIcon className={classes.icon}>
-                            <HomeIcon />
-                        </ListItemIcon>
-                        <ListItemText primary={'Personal'} />
-                    </ListItem>
-                    <ListItem
-                        button
-                        className={classes.listItem}
-                        selected={props.category === 'other'}
-                        onClick={() => handleCategory('other')}
-                        classes={{ selected: classes.selectedOther }}
-                        key={'Other'}
-                    >
-                        <ListItemIcon className={classes.icon}>
-                            <LayersIcon />
-                        </ListItemIcon>
-                        <ListItemText primary={'Other'} />
-                    </ListItem>
-                    <Divider />
-                </List>
+                    <ListItemIcon className={classes.icon}>
+                        <BorderAllIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={'All'} />
+                </ListItem>
+                <ListItem
+                    button
+                    className={classes.listItem}
+                    selected={props.category === 'work'}
+                    onClick={() => handleCategory('work')}
+                    classes={{ selected: classes.selectedWork }}
+                    key={'Work'}
+                >
+                    <ListItemIcon className={classes.icon}>
+                        <WorkIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={'Work'} />
+                </ListItem>
+                <ListItem
+                    button
+                    className={classes.listItem}
+                    selected={props.category === 'personal'}
+                    onClick={() => handleCategory('personal')}
+                    classes={{ selected: classes.selectedPersonal }}
+                    key={'Personal'}
+                >
+                    <ListItemIcon className={classes.icon}>
+                        <HomeIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={'Personal'} />
+                </ListItem>
+                <ListItem
+                    button
+                    className={classes.listItem}
+                    selected={props.category === 'other'}
+                    onClick={() => handleCategory('other')}
+                    classes={{ selected: classes.selectedOther }}
+                    key={'Other'}
+                >
+                    <ListItemIcon className={classes.icon}>
+                        <LayersIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={'Other'} />
+                </ListItem>
+                <Divider />
+            </List>
 
-                {history.location.pathname === '/app/tasks' && (
-                    <List className={classes.list}>
-                        <ListItem
-                            button
-                            className={classes.listItem}
-                            selected={props.tasksScope === 'today'}
-                            onClick={() => handleScope('today')}
-                            classes={{ selected: classes.selected }}
-                            key={'today'}
-                        >
-                            <ListItemText
-                                classes={{
-                                    primary: classes.categoryText,
-                                }}
-                                primary={'Today'}
-                            />
-                        </ListItem>
-                        <ListItem
-                            button
-                            className={classes.listItem}
-                            selected={props.tasksScope === 'upcoming'}
-                            onClick={() => handleScope('upcoming')}
-                            classes={{ selected: classes.selected }}
-                            key={'upcoming'}
-                        >
-                            <ListItemText
-                                classes={{
-                                    primary: classes.categoryText,
-                                }}
-                                primary={'Upcoming'}
-                            />
-                        </ListItem>
-                        <ListItem
-                            button
-                            className={classes.listItem}
-                            selected={props.tasksScope === 'overdue'}
-                            onClick={() => handleScope('overdue')}
-                            classes={{ selected: classes.selected }}
-                            key={'overdue'}
-                        >
-                            <ListItemText
-                                classes={{
-                                    primary: classes.categoryText,
-                                }}
-                                primary={'Overdue'}
-                            />
-                        </ListItem>
-                        <ListItem
-                            button
-                            className={classes.listItem}
-                            selected={props.tasksScope === 'completed'}
-                            onClick={() => handleScope('completed')}
-                            classes={{ selected: classes.selected }}
-                            key={'completed'}
-                        >
-                            <ListItemText
-                                classes={{
-                                    primary: classes.categoryText,
-                                }}
-                                primary={'Completed'}
-                            />
-                        </ListItem>
-                    </List>
-                )}
-            </Drawer>
+            {history.location.pathname === '/app/tasks' && (
+                <List className={classes.list}>
+                    <ListItem
+                        button
+                        className={classes.listItem}
+                        selected={props.tasksScope === 'today'}
+                        onClick={() => handleScope('today')}
+                        classes={{ selected: classes.selected }}
+                        key={'today'}
+                    >
+                        <ListItemText
+                            classes={{
+                                primary: classes.categoryText,
+                            }}
+                            primary={'Today'}
+                        />
+                    </ListItem>
+                    <ListItem
+                        button
+                        className={classes.listItem}
+                        selected={props.tasksScope === 'upcoming'}
+                        onClick={() => handleScope('upcoming')}
+                        classes={{ selected: classes.selected }}
+                        key={'upcoming'}
+                    >
+                        <ListItemText
+                            classes={{
+                                primary: classes.categoryText,
+                            }}
+                            primary={'Upcoming'}
+                        />
+                    </ListItem>
+                    <ListItem
+                        button
+                        className={classes.listItem}
+                        selected={props.tasksScope === 'overdue'}
+                        onClick={() => handleScope('overdue')}
+                        classes={{ selected: classes.selected }}
+                        key={'overdue'}
+                    >
+                        <ListItemText
+                            classes={{
+                                primary: classes.categoryText,
+                            }}
+                            primary={'Overdue'}
+                        />
+                    </ListItem>
+                    <ListItem
+                        button
+                        className={classes.listItem}
+                        selected={props.tasksScope === 'completed'}
+                        onClick={() => handleScope('completed')}
+                        classes={{ selected: classes.selected }}
+                        key={'completed'}
+                    >
+                        <ListItemText
+                            classes={{
+                                primary: classes.categoryText,
+                            }}
+                            primary={'Completed'}
+                        />
+                    </ListItem>
+                </List>
+            )}
+        </div>
+    );
+
+    return (
+        <nav className={classes.drawer} aria-label="Mailbox folders">
+            {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+            <Hidden smUp implementation="css">
+                <Drawer
+                    variant="temporary"
+                    open={props.drawerOpen}
+                    onClose={props.handleDrawerToggle}
+                    classes={{
+                        paper: classes.drawerPaper,
+                    }}
+                    ModalProps={{
+                        keepMounted: true, // Better open performance on mobile.
+                    }}
+                >
+                    {drawer}
+                </Drawer>
+            </Hidden>
+            <Hidden xsDown implementation="css">
+                <Drawer
+                    classes={{
+                        paper: classes.drawerPaper,
+                    }}
+                    variant="permanent"
+                    open
+                >
+                    {drawer}
+                </Drawer>
+            </Hidden>
         </nav>
     );
 };

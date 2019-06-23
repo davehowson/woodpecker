@@ -17,13 +17,9 @@ import { AddTask, TaskList } from '@/Tasks';
 const useStyles = makeStyles(theme => ({
     taskRow: {
         padding: theme.spacing(2, 2, 0),
-        [theme.breakpoints.up('md')]: {
-            height: '80vh !important',
-            overflow: 'auto',
-        },
-        [theme.breakpoints.down('sm')]: {
-            padding: theme.spacing(1, 0),
-        },
+
+        height: '80vh !important',
+        overflow: 'auto',
     },
     heading: {
         fontSize: theme.typography.pxToRem(15),
@@ -136,7 +132,7 @@ const Tasks = props => {
                             </Grid>
                         ) : (
                             <Grid container justify="center">
-                                <Grid item lg={10}>
+                                <Grid item xs={10}>
                                     <Typography
                                         className={classes.heading}
                                         component="h2"
@@ -145,7 +141,7 @@ const Tasks = props => {
                                     </Typography>
                                     <Divider className={classes.divider} />
                                 </Grid>
-                                <Grid item md={12} lg={10}>
+                                <Grid item xs={12} lg={10}>
                                     <Scrollbars className={classes.taskRow}>
                                         <TaskList
                                             tasks={tasks}

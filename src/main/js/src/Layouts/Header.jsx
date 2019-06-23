@@ -18,7 +18,9 @@ import logo from '@/img/header.png';
 
 const useStyles = makeStyles(theme => ({
     appBar: props => ({
-        width: `calc(100% - ${props.drawerWidth}px)`,
+        [theme.breakpoints.up('sm')]: {
+            width: `calc(100% - ${props.drawerWidth}px)`,
+        },
     }),
     menuButton: {
         marginRight: theme.spacing(2),
@@ -33,10 +35,6 @@ const useStyles = makeStyles(theme => ({
     navButtons: {
         marginLeft: 'auto',
         marginRight: theme.spacing(2),
-
-        [theme.breakpoints.down('xs')]: {
-            display: 'none',
-        },
     },
     tab: {
         width: 60,
